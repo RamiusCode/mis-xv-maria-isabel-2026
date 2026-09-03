@@ -17,6 +17,7 @@ const linea3 = "para asistir a la celebración de los";
 const anios = "XV AÑOS";
 const preposicion = "de";
 const nombre = "María Isabel";
+const apellidos = "Ramos Delgadillo";
 // ──────────────────────────────────────────────────────────────
 ---
 
@@ -107,7 +108,10 @@ const nombre = "María Isabel";
 
             <p class="anios">{anios}</p>
             <p class="de font-cormorant">{preposicion}</p>
-            <h2 class="nombre-dedicatoria">{nombre}</h2>
+            <h2 class="nombre-dedicatoria">
+                <span class="block">{nombre}</span>
+                <span class="block apellidos-dedicatoria">{apellidos}</span>
+            </h2>
         </div>
     </article>
 </section>
@@ -316,11 +320,18 @@ const nombre = "María Isabel";
         font-family: "Great Vibes", cursive;
         font-weight: 400;
         color: #8f6420;
-        font-size: 19cqw;
-        line-height: 1.15;
+        font-size: 17cqw;
+        line-height: 1.2;
         padding-bottom: 0.12em;
         margin-top: 1cqw;
         text-shadow: 0 1px 0 rgba(255, 248, 226, 0.6);
+    }
+
+    /* Los apellidos, debajo y algo más chicos que el nombre: así el
+       nombre sigue mandando y el renglón entero no se apelmaza */
+    .apellidos-dedicatoria {
+        font-size: 0.62em;
+        line-height: 1.1;
     }
 
     /* ── Polvo de oro ───────────────────────────────────────────── */
