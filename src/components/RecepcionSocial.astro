@@ -9,12 +9,12 @@ const salon = ["EL GRAN COMEDOR", "DE HOGWARTS"];
 const direccion = [
     "Av. Comavi c/A N° 1",
     "entre 4to y 5to anillo",
-    "Frente a ex Banco BASSIL",
+    "Frente a ex Banco Fassil",
 ];
 const mapa = "https://maps.app.goo.gl/optHBhjQMEwJr1Mx7";
 const textoBoton = "Ver ubicación";
 // El castillo, no el arco de flores de la plantilla vieja
-const dibujo = "/imagenes/recepcion.png";
+const dibujo = "/imagenes/adorno.png";
 // ──────────────────────────────────────────────────────────────
 ---
 
@@ -192,10 +192,11 @@ const dibujo = "/imagenes/recepcion.png";
     }
 
     .dibujo-recepcion {
-        width: 30%;
-        max-width: 120px;
-        /* La proporción del dibujo es 449x517 */
-        aspect-ratio: 449 / 517;
+        /* Es un adorno apaisado, no una viñeta vertical: va ancho */
+        width: 88%;
+        max-width: 340px;
+        /* La proporción del adorno es 754x328 */
+        aspect-ratio: 754 / 328;
         margin-top: 1.6rem;
         filter: drop-shadow(0 4px 10px rgba(10, 2, 4, 0.55));
     }

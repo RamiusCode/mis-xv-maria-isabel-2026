@@ -7,8 +7,8 @@
 const parrafo1 =
     "Con la bendición de Dios y el amor de toda mi familia, me siento muy feliz de llegar a este momento tan especial de mi vida. Ahora empieza un camino lleno de sueños e ilusiones que, con mucha fe, humildad y esperanza, deseo cumplir. Quisiera, con inmensa alegría, compartir este comienzo de esta bella etapa junto a todos ustedes.";
 
-const parrafo2 =
-    "Tu presencia es muy importante para mí. Por favor, confirma tu asistencia para compartir juntos este día tan especial.";
+const parrafo2 = "Tu presencia es muy importante para mí.";
+const lechuza = "Confirma tu asistencia enviando tu lechuza.";
 
 const llamado = "Por favor, haz clic para confirmar asistencia";
 
@@ -43,6 +43,12 @@ const textoBoton = "Confirmar Asistencia";
         <!-- El mensaje, en card de trazo dorado -->
         <div id="card-despedida" class="card-despedida">
             <p class="parrafo-despedida">{parrafo1}</p>
+        </div>
+
+        <!-- La lechuza, en su propia card y más grande: es el pedido
+             concreto al invitado, no puede leerse como un renglón más -->
+        <div id="card-lechuza" class="card-despedida card-lechuza">
+            <p class="parrafo-despedida">{parrafo2}</p>
 
             <div class="divisor-corazon" aria-hidden="true">
                 <span class="linea-divisor"></span>
@@ -50,7 +56,7 @@ const textoBoton = "Confirmar Asistencia";
                 <span class="linea-divisor"></span>
             </div>
 
-            <p class="parrafo-despedida">{parrafo2}</p>
+            <p class="texto-lechuza">{lechuza}</p>
         </div>
 
         <p class="llamado-despedida">{llamado}</p>
@@ -149,6 +155,25 @@ const textoBoton = "Confirmar Asistencia";
         border-radius: 12px;
         background: rgba(28, 5, 10, 0.25);
         box-shadow: 0 8px 22px rgba(10, 2, 4, 0.35);
+    }
+
+    /* La card de la lechuza: separada de la de arriba y con el borde
+       algo más presente, porque es la que pide la acción */
+    .card-lechuza {
+        margin-top: 1.6rem;
+        border-color: rgba(201, 164, 92, 0.8);
+    }
+
+    /* "Confirma tu asistencia enviando tu lechuza": el renglón que
+       tiene que saltar, en oro y bastante más grande que el cuerpo */
+    .texto-lechuza {
+        font-family: "Callingstone", cursive;
+        color: #e4c179;
+        font-size: 6cqw;
+        line-height: 1.6;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.5),
+            0 2px 8px rgba(10, 2, 4, 0.8);
     }
 
     .parrafo-despedida {
