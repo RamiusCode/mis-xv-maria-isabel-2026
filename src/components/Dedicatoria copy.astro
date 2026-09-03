@@ -1,0 +1,467 @@
+---
+// src/components/Dedicatoria.astro — La carta de Hogwarts.
+//
+// Sin pergamino: sobre el paño vino del fondo va sólo un trazo dorado
+// —marco doble, volutas de esquina y filigranas— con el texto en oro y
+// blanco cálido. Todo lo de adentro se mide en cqw (ancho del marco),
+// así el bloque se ve igual en celular, tablet y computadora.
+//
+// El fondo NO se toca acá: ya lo pone Layout.astro.
+//
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const colegio = ["COLEGIO HOGWARTS", "DE MAGIA Y HECHICERÍA"];
+const linea1 = "Tienen el honor de informarte";
+const linea2 = "que has sido elegido por el";
+const destacado = "Cáliz de Fuego";
+const linea3 = "para asistir a la celebración de los";
+const anios = "XV AÑOS";
+const preposicion = "de";
+const nombre = "María Isabel";
+// ──────────────────────────────────────────────────────────────
+---
+
+<!-- Cinzel: la misma romana grabada del estandarte -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<section
+    id="dedicatoria"
+    class="relative w-full overflow-hidden flex flex-col items-center justify-center py-4 px-5"
+>
+    <!-- Polvo de oro flotando alrededor de la carta -->
+    <span class="mota mota-1" aria-hidden="true"></span>
+    <span class="mota mota-2" aria-hidden="true"></span>
+    <span class="mota mota-3" aria-hidden="true"></span>
+    <span class="mota mota-4" aria-hidden="true"></span>
+    <span class="mota mota-5" aria-hidden="true"></span>
+
+    <!-- ── El marco de la carta ────────────────────────────────── -->
+    <article id="carta-hogwarts" class="marco-carta">
+        <!-- Trazo doble: la línea gruesa y, adentro, la hairline -->
+        <div class="filete" aria-hidden="true"></div>
+
+        <!-- Volutas en las cuatro esquinas -->
+        <svg class="voluta v-si" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-sd" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-ii" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-id" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+
+        <!-- Rombos que cortan el filete arriba y abajo, al medio -->
+        <span class="rombo rombo-arriba" aria-hidden="true"></span>
+        <span class="rombo rombo-abajo" aria-hidden="true"></span>
+
+        <div class="carta">
+            <!-- La esfera, arriba de todo -->
+            <img
+                src="/imagenes/esfera.png"
+                alt=""
+                aria-hidden="true"
+                class="esfera select-none"
+            />
+
+            <p class="colegio">
+                {colegio.map((linea) => <span class="block">{linea}</span>)}
+            </p>
+
+            <!-- Filigrana que separa el encabezado del cuerpo -->
+            <svg class="filigrana" viewBox="0 0 220 18" aria-hidden="true">
+                <path
+                    d="M4 9 H84 M136 9 H216 M96 9 L110 3 L124 9 L110 15 Z M90 9 h-3 M130 9 h3"
+                ></path>
+            </svg>
+
+            <p class="cuerpo">
+                <span class="block">{linea1}</span>
+                <span class="block">{linea2}</span>
+            </p>
+
+            <p class="destacado">{destacado}</p>
+
+            <p class="cuerpo cuerpo-cierre">{linea3}</p>
+
+            <p class="anios">{anios}</p>
+            <p class="de font-cormorant">{preposicion}</p>
+            <h2 class="nombre-dedicatoria">{nombre}</h2>
+
+            <!-- Medallón de cierre: el sello, en puro trazo dorado -->
+            <div class="sello" aria-hidden="true">
+                <span class="sello-aro"></span>
+                <span class="sello-xv">XV</span>
+            </div>
+        </div>
+    </article>
+</section>
+
+<style>
+    /* ── El marco ───────────────────────────────────────────────
+       No lleva papel: el fondo vino del layout se ve a través. Sólo
+       un velo apenas más oscuro para que el texto blanco levante. */
+    .marco-carta {
+        position: relative;
+        width: min(100%, 380px);
+        padding: 13% 8.5% 11%;
+        container-type: inline-size;
+        border: 1px solid rgba(201, 164, 92, 0.9);
+        background: radial-gradient(
+            120% 100% at 50% 40%,
+            rgba(28, 5, 10, 0.34) 0%,
+            rgba(28, 5, 10, 0.16) 60%,
+            rgba(28, 5, 10, 0.05) 100%
+        );
+        box-shadow:
+            0 0 26px rgba(201, 164, 92, 0.14),
+            0 14px 34px rgba(10, 2, 4, 0.45);
+    }
+
+    /* La hairline de adentro: el trazo doble */
+    .filete {
+        position: absolute;
+        inset: 2.6cqw;
+        pointer-events: none;
+        border: 1px solid rgba(201, 164, 92, 0.45);
+    }
+
+    /* Volutas de esquina, montadas sobre el filete */
+    .voluta {
+        position: absolute;
+        width: 10cqw;
+        height: 10cqw;
+        fill: none;
+        stroke: #c9a45c;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        pointer-events: none;
+        filter: drop-shadow(0 1px 3px rgba(10, 2, 4, 0.6));
+    }
+
+    .voluta circle {
+        fill: #c9a45c;
+        stroke: none;
+    }
+
+    .v-si {
+        top: 2.6cqw;
+        left: 2.6cqw;
+    }
+
+    .v-sd {
+        top: 2.6cqw;
+        right: 2.6cqw;
+        transform: scaleX(-1);
+    }
+
+    .v-ii {
+        bottom: 2.6cqw;
+        left: 2.6cqw;
+        transform: scaleY(-1);
+    }
+
+    .v-id {
+        bottom: 2.6cqw;
+        right: 2.6cqw;
+        transform: scale(-1, -1);
+    }
+
+    /* Rombos al medio del borde, como broches del marco */
+    .rombo {
+        position: absolute;
+        left: 50%;
+        width: 3.4cqw;
+        height: 3.4cqw;
+        background: #c9a45c;
+        transform: translate(-50%, -50%) rotate(45deg);
+        box-shadow: 0 0 8px rgba(201, 164, 92, 0.5);
+        pointer-events: none;
+    }
+
+    .rombo-arriba {
+        top: 0;
+    }
+
+    .rombo-abajo {
+        top: 100%;
+    }
+
+    /* ── Lo escrito ─────────────────────────────────────────────── */
+    .carta {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* La esfera que corona la carta */
+    .esfera {
+        width: 30cqw;
+        height: auto;
+        filter: drop-shadow(0 4px 12px rgba(10, 2, 4, 0.75));
+    }
+
+    /* "COLEGIO HOGWARTS…": en Callingstone, la decorativa del proyecto.
+       Al ser una letra de fantasía va con menos tracking que la romana
+       y algo más de cuerpo, si no se lee chica. */
+    .colegio {
+        font-family: "Callingstone", cursive;
+        font-weight: 400;
+        color: #e4c179;
+        font-size: 5.2cqw;
+        letter-spacing: 0.07em;
+        text-indent: 0.07em;
+        line-height: 1.9;
+        margin-top: 4cqw;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    /* Filigrana separadora */
+    .filigrana {
+        width: 66cqw;
+        height: auto;
+        margin-top: 4.5cqw;
+        fill: none;
+        stroke: #c9a45c;
+        stroke-width: 1.3;
+        stroke-linecap: round;
+    }
+
+    /* El cuerpo, en Callingstone (minúsculas) y blanco cálido: es lo
+       que se tiene que leer. Al ser decorativa va más grande y con
+       más aire entre renglones que la romana. */
+    .cuerpo {
+        font-family: "Callingstone", cursive;
+        color: #f6efe2;
+        font-size: 5.2cqw;
+        line-height: 1.75;
+        letter-spacing: 0.02em;
+        margin-top: 5.5cqw;
+        text-shadow: 0 2px 8px rgba(10, 2, 4, 0.85);
+    }
+
+    .cuerpo-cierre {
+        margin-top: 3.5cqw;
+    }
+
+    /* "Cáliz de Fuego": el oro más claro de toda la carta */
+    .destacado {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #f0d089;
+        font-size: 6.6cqw;
+        letter-spacing: 0.09em;
+        text-indent: 0.09em;
+        line-height: 1.4;
+        margin-top: 3.5cqw;
+        text-shadow:
+            0 2px 8px rgba(10, 2, 4, 0.85),
+            0 0 18px rgba(240, 208, 137, 0.35);
+    }
+
+    /* "XV AÑOS" grabado en oro */
+    .anios {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        color: #e4c179;
+        font-size: 12cqw;
+        letter-spacing: 0.12em;
+        text-indent: 0.12em;
+        line-height: 1.2;
+        margin-top: 6cqw;
+        text-shadow:
+            0 3px 9px rgba(10, 2, 4, 0.85),
+            0 0 22px rgba(228, 193, 121, 0.3);
+    }
+
+    .de {
+        color: #dcc9ab;
+        font-size: 8cqw;
+        font-style: italic;
+        letter-spacing: 0.05em;
+        margin-top: 1.5cqw;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    /* El nombre, en la misma cursiva y el mismo oro del estandarte */
+    .nombre-dedicatoria {
+        font-family: "Great Vibes", cursive;
+        font-weight: 400;
+        color: #e4c179;
+        font-size: 19cqw;
+        line-height: 1.15;
+        padding-bottom: 0.12em;
+        margin-top: 1cqw;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85),
+            0 0 20px rgba(228, 193, 121, 0.3);
+    }
+
+    /* ── El sello de cierre ─────────────────────────────────────── */
+    .sello {
+        position: relative;
+        width: 17cqw;
+        height: 17cqw;
+        margin-top: 7cqw;
+        display: grid;
+        place-items: center;
+    }
+
+    /* Doble aro dorado, sin relleno: sigue siendo puro trazo */
+    .sello-aro {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        border: 1px solid #c9a45c;
+        box-shadow:
+            0 0 0 3px rgba(28, 5, 10, 0.35),
+            0 0 0 4px rgba(201, 164, 92, 0.55),
+            0 0 16px rgba(201, 164, 92, 0.25);
+    }
+
+    .sello-xv {
+        position: relative;
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        font-size: 7cqw;
+        letter-spacing: 0.08em;
+        text-indent: 0.08em;
+        color: #e4c179;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.8);
+    }
+
+    /* ── Polvo de oro ───────────────────────────────────────────── */
+    .mota {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: polvo 5.2s ease-in-out infinite;
+    }
+
+    .mota-1 {
+        left: 7%;
+        top: 22%;
+        animation-delay: 0s;
+    }
+
+    .mota-2 {
+        right: 9%;
+        top: 30%;
+        animation-delay: 1.1s;
+    }
+
+    .mota-3 {
+        left: 11%;
+        bottom: 24%;
+        animation-delay: 2.2s;
+    }
+
+    .mota-4 {
+        right: 7%;
+        bottom: 18%;
+        animation-delay: 3.1s;
+    }
+
+    .mota-5 {
+        left: 50%;
+        top: 7%;
+        animation-delay: 4s;
+    }
+
+    @keyframes polvo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mota {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const carta = document.getElementById("carta-hogwarts");
+        if (!carta) return;
+
+        const disparo = { trigger: carta, start: "top 82%" };
+
+        // Primero se dibuja el marco...
+        gsap.from(carta, {
+            scrollTrigger: disparo,
+            opacity: 0,
+            y: 34,
+            scale: 0.95,
+            duration: 1,
+            ease: "power3.out",
+        });
+
+        // ...y recién después se lee lo que trae escrito.
+        const texto = carta.querySelector(".carta");
+        if (texto) {
+            gsap.from(Array.from(texto.children), {
+                scrollTrigger: disparo,
+                opacity: 0,
+                y: 16,
+                duration: 0.7,
+                stagger: 0.13,
+                delay: 0.45,
+                ease: "power2.out",
+            });
+        }
+
+        // El sello cierra la carta con un golpe seco.
+        const sello = carta.querySelector(".sello");
+        if (sello) {
+            gsap.from(sello, {
+                scrollTrigger: disparo,
+                scale: 1.9,
+                opacity: 0,
+                rotateZ: -18,
+                duration: 0.5,
+                delay: 1.5,
+                ease: "back.out(2.2)",
+            });
+        }
+    });
+</script>

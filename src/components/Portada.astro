@@ -1,0 +1,521 @@
+---
+// src/components/Portada.astro — Portada tipo sobre de Hogwarts.
+//
+// La estructura copia el sobre impreso de referencia:
+//   sobre.webp    → fondo a pantalla completa (solapa granate + lacrado)
+//   boton.png     → sello dorado, centrado en la punta de la solapa; es
+//                   el botón que arranca la música y abre la invitación
+//   "MIS XV AÑOS" → renglón en versalitas doradas
+//   separador.png → filete con la snitch dorada
+//   la frase      → letra caligráfica dorada (la misma de la portada)
+//   adorno.png    → silueta del castillo, pintada en oro con máscara
+//
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const titulo = "MIS XV AÑOS";
+const frase = "El comienzo de mi propia magia";
+// ──────────────────────────────────────────────────────────────
+
+// El nombre del invitado llega por prop desde las invitaciones
+// personalizadas; si va vacío, el renglón "Para:" no se dibuja.
+export interface Props {
+    invitado?: string;
+}
+const { invitado = "" } = Astro.props;
+---
+
+<!-- CAPA BLANCA DE TRANSICIÓN — tapa el fondo del layout durante el fade -->
+<div
+    id="capa-blanca"
+    style="
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    z-index: 8499;
+    opacity: 1;
+    pointer-events: none;
+"
+>
+</div>
+
+<!--
+   La portada va por debajo del botón flotante de música (z 9000) para que
+   el control siga accesible mientras la portada se desvanece.
+-->
+<section
+    class="fixed inset-0 w-full h-screen flex justify-center z-[8500]"
+    id="portada-section"
+    style="background-color: #4a0d16;"
+>
+    <!-- Columna móvil: el diseño nunca se estira en tablet / PC -->
+    <div
+        class="relative w-full max-w-[430px] h-full overflow-hidden"
+        style="background-color: #4a0d16; background-image: url('/imagenes/sobre.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: 0 0 40px rgba(0,0,0,0.08);"
+    >
+        <!-- Chispas doradas sueltas, como las del sobre impreso -->
+        <span class="chispa chispa-1" aria-hidden="true"></span>
+        <span class="chispa chispa-2" aria-hidden="true"></span>
+        <span class="chispa chispa-3" aria-hidden="true"></span>
+        <span class="chispa chispa-4" aria-hidden="true"></span>
+
+        <!--
+           Sello de lacre = botón de ingreso. Va justo en la punta de la
+           solapa, que es donde iría el lacre de verdad.
+        -->
+        <button
+            id="btn-ingresar"
+            type="button"
+            aria-label="Abrir la invitación"
+            class="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
+        >
+            <span class="pulso-sello" aria-hidden="true"></span>
+            <img
+                src="/imagenes/boton.png"
+                alt=""
+                width="868"
+                height="929"
+                class="relative w-[110px] h-auto select-none drop-shadow-[0_10px_18px_rgba(30,4,8,0.55)]"
+            />
+            <!-- Manito que invita a tocar el sello -->
+            <span class="manito" aria-hidden="true">
+                <svg viewBox="0 0 64 84" width="28" height="37">
+                    <path
+                        d="M22 48V14a6 6 0 0 1 12 0v22h2v-8a5 5 0 0 1 10 0v8h2v-5a5 5 0 0 1 10 0v22c0 13-8 22-20 22-9 0-14-4-18-11L9 52c-2-4 3-8 6-4l7 8z"
+                        fill="#f3ddb4"
+                        stroke="#6d4a18"
+                        stroke-width="2.5"
+                        stroke-linejoin="round"></path>
+                </svg>
+            </span>
+        </button>
+
+        <!--
+           Bloque de abajo, en el orden del sobre impreso:
+           destinatario · título · separador · frase · castillo.
+        -->
+        <div
+            id="bloque-inferior"
+            class="absolute left-0 right-0 bottom-[2%] px-7 flex flex-col items-center text-center"
+        >
+            {
+                invitado && (
+                    <p class="linea-invitado">
+                        Para: <span class="nombre-invitado">{invitado}</span>
+                    </p>
+                )
+            }
+
+            <p class="titulo-xv">{titulo}</p>
+
+            <img
+                src="/imagenes/separador.png"
+                alt=""
+                width="1005"
+                height="227"
+                aria-hidden="true"
+                class="separador-snitch select-none"
+            />
+
+            <p class="frase-magia font-verandah">{frase}</p>
+
+            <!-- El castillo es línea negra: se pinta en oro con máscara -->
+            <span
+                class="adorno-castillo"
+                aria-hidden="true"
+                style="--ic: url('/imagenes/adorno.png')"></span>
+        </div>
+    </div>
+</section>
+
+<style>
+    body.portada-activa {
+        overflow: hidden !important;
+        height: 100vh !important;
+    }
+
+    /* La capa blanca tapa el fondo del layout siempre */
+    #capa-blanca {
+        transition: opacity 0.4s ease;
+    }
+
+    /* ── Bloque inferior ────────────────────────────────────── */
+    .linea-invitado {
+        font-family: "Cormorant Garamond", serif;
+        color: #d9b877;
+        font-size: clamp(0.9rem, 3.7vw, 1.05rem);
+        letter-spacing: 0.12em;
+        margin-bottom: 1.1rem;
+    }
+
+    .nombre-invitado {
+        color: #f0d9a4;
+    }
+
+    /* "MIS XV AÑOS": versalitas muy abiertas, como el grabado del sobre */
+    .titulo-xv {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 400;
+        color: #c9a45c;
+        font-size: clamp(1.02rem, 4.4vw, 1.22rem);
+        letter-spacing: 0.42em;
+        /* El espaciado deja un hueco a la derecha: se compensa con sangría */
+        text-indent: 0.42em;
+        text-transform: uppercase;
+        text-shadow: 0 2px 6px rgba(30, 4, 8, 0.6);
+    }
+
+    .separador-snitch {
+        width: 62%;
+        max-width: 240px;
+        height: auto;
+        margin-top: 0.55rem;
+        opacity: 0.95;
+        filter: drop-shadow(0 3px 7px rgba(30, 4, 8, 0.55));
+    }
+
+    /* La frase en la caligrafía de la portada, en degradé de oro */
+    .frase-magia {
+        margin-top: 0.9rem;
+        font-size: clamp(1.55rem, 7.4vw, 2rem);
+        line-height: 1.25;
+        background: linear-gradient(
+            180deg,
+            #f0d7a0 0%,
+            #c9a45c 55%,
+            #a77c3c 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        /* El degradé recorta el color: la sombra va por fuera, con filter */
+        filter: drop-shadow(0 3px 8px rgba(30, 4, 8, 0.55));
+    }
+
+    /* Castillo de Hogwarts: PNG de línea negra pintado en oro */
+    .adorno-castillo {
+        display: block;
+        width: 84%;
+        max-width: 320px;
+        aspect-ratio: 754 / 328;
+        margin-top: 1rem;
+        background: linear-gradient(180deg, #d8b673 0%, #b98f45 100%);
+        -webkit-mask-image: var(--ic);
+        mask-image: var(--ic);
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        opacity: 0.92;
+    }
+
+    /* ── Chispas ────────────────────────────────────────────── */
+    .chispa {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 6px 1px rgba(231, 198, 137, 0.8);
+        opacity: 0;
+        pointer-events: none;
+        animation: brillo 4.2s ease-in-out infinite;
+    }
+
+    .chispa-1 {
+        left: 16%;
+        top: 74%;
+        animation-delay: 0.2s;
+    }
+    .chispa-2 {
+        right: 14%;
+        top: 71%;
+        animation-delay: 1.4s;
+    }
+    .chispa-3 {
+        left: 26%;
+        top: 84%;
+        animation-delay: 2.6s;
+    }
+    .chispa-4 {
+        right: 22%;
+        top: 87%;
+        animation-delay: 3.4s;
+    }
+
+    @keyframes brillo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* ── Sello ──────────────────────────────────────────────── */
+    /* Aro que late detrás del lacre para que se lea como botón */
+    .pulso-sello {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 110px;
+        height: 110px;
+        margin: -55px 0 0 -55px;
+        border-radius: 9999px;
+        border: 1px solid rgba(231, 198, 137, 0.75);
+        opacity: 0;
+        pointer-events: none;
+        animation: pulso 2.6s ease-out infinite;
+    }
+
+    @keyframes pulso {
+        0% {
+            transform: scale(0.9);
+            opacity: 0.5;
+        }
+        70%,
+        100% {
+            transform: scale(1.45);
+            opacity: 0;
+        }
+    }
+
+    /* La manito va al costado del sello, no colgando debajo: así nunca
+       se le viene encima al renglón de "MIS XV AÑOS". */
+    .manito {
+        position: absolute;
+        right: -20px;
+        bottom: 18px;
+        pointer-events: none;
+        filter: drop-shadow(0 4px 8px rgba(30, 4, 8, 0.5));
+        animation: toque 2.6s ease-in-out infinite;
+    }
+
+    @keyframes toque {
+        0%,
+        70%,
+        100% {
+            transform: translate(0, 0);
+        }
+        80% {
+            transform: translate(-6px, -8px);
+        }
+        90% {
+            transform: translate(-3px, -4px);
+        }
+    }
+
+    /* Quien pide menos movimiento no ve latidos */
+    @media (prefers-reduced-motion: reduce) {
+        .pulso-sello,
+        .manito,
+        .chispa {
+            animation: none;
+        }
+    }
+
+    /* Pantallas cortas: el bloque de abajo se aprieta un poco */
+    @media (max-height: 700px) {
+        .separador-snitch {
+            width: 54%;
+            margin-top: 0.35rem;
+        }
+        .frase-magia {
+            margin-top: 0.6rem;
+        }
+        .adorno-castillo {
+            width: 74%;
+            margin-top: 0.6rem;
+        }
+    }
+
+    /* ── Solo computadora ───────────────────────────────────────
+       El celular queda tal cual (ahí no hay mouse, así que esta
+       regla ni se activa). En la compu la ventana es mucho más
+       baja que un celular: el sello sube y el bloque de abajo se
+       mide en vh, para que crezca o se achique con la ventana y
+       nunca se choque con "MIS XV AÑOS".                        */
+    @media (hover: hover) and (pointer: fine) {
+        #btn-ingresar {
+            top: 46%;
+        }
+
+        #bloque-inferior {
+            bottom: 3vh;
+        }
+
+        .titulo-xv {
+            font-size: clamp(0.85rem, 1.9vh, 1.22rem);
+        }
+
+        .separador-snitch {
+            width: min(62%, 34vh);
+            max-width: 240px;
+            margin-top: 1vh;
+        }
+
+        .frase-magia {
+            font-size: clamp(1.2rem, 3.4vh, 2rem);
+            margin-top: 1.6vh;
+        }
+
+        .adorno-castillo {
+            width: min(84%, 42vh);
+            max-width: 320px;
+            margin-top: 1.8vh;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("portada-activa");
+
+            const boton = document.getElementById("btn-ingresar");
+            const bloque = document.getElementById("bloque-inferior");
+            if (!boton || !bloque) return;
+
+            // Título, separador, frase y castillo entran en cascada
+            const piezas = Array.from(bloque.children);
+
+            // ── Estado inicial ──────────────────────────────────────
+            gsap.set(piezas, { opacity: 0, y: 18 });
+            // El sello ya nace centrado por las clases -translate-*, así que
+            // solo se anima la escala desde su propio centro.
+            gsap.set(boton, { opacity: 0, scale: 0.7 });
+
+            // ── Animaciones de entrada ──────────────────────────────
+            const tl = gsap.timeline({ delay: 0.3 });
+
+            tl.to(boton, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                ease: "back.out(1.6)",
+            }).to(
+                piezas,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    stagger: 0.16,
+                    ease: "power2.out",
+                },
+                0.45,
+            );
+
+            // ── Latido sutil del sello (invita a tocarlo) ───────────
+            tl.add(() => {
+                gsap.to(boton, {
+                    scale: 1.05,
+                    duration: 1.6,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                });
+            });
+
+            // ── Hover ───────────────────────────────────────────────
+            // El escalado va por GSAP y no con hover:scale de Tailwind:
+            // el latido de arriba escribe transform inline y le ganaría.
+            boton.addEventListener("mouseenter", () => {
+                gsap.to(boton, {
+                    scale: 1.1,
+                    duration: 0.3,
+                    ease: "power2.out",
+                });
+            });
+            boton.addEventListener("mouseleave", () => {
+                gsap.to(boton, { scale: 1, duration: 0.3, ease: "power2.out" });
+            });
+
+            const portadaSection = document.getElementById("portada-section");
+            const capaBlanca = document.getElementById("capa-blanca");
+
+            // ── Suelta el scroll y deja la invitación arrancada en el
+            //    arco de NombresFlores, su primera sección.
+            const abrirInvitacion = () => {
+                document.body.classList.remove("portada-activa");
+                document.body.style.overflow = "auto";
+
+                // Salto seco, no suave: la portada todavía se está
+                // desvaneciendo encima y el arco tiene que estar ya en su
+                // lugar cuando termina de irse.
+                const destino = document.getElementById("arco-novios");
+                if (destino) {
+                    destino.scrollIntoView({ block: "start" });
+                } else {
+                    window.scrollTo({ top: 0 });
+                }
+            };
+
+            // ── Click en el sello: música + salida de la portada ─────
+            boton.addEventListener("click", () => {
+                gsap.killTweensOf(boton);
+
+                // El botón flotante de BotonMusica.astro aparece solo al
+                // detectar que la melodía ya está sonando.
+                const audio = new Audio("/musica/melodia2.mp3");
+                audio.loop = true;
+                audio.volume = 0.5;
+                audio.play().catch((error) => {
+                    console.log("❌ Error al reproducir audio:", error);
+                });
+                (window as any).audioGlobal = audio;
+                (window as any).estaReproduciendoGlobal = true;
+
+                gsap.timeline()
+                    // El sello primero se hunde, como sellando, y recién
+                    // después se abre y se va.
+                    .to(boton, {
+                        scale: 0.88,
+                        duration: 0.22,
+                        ease: "power2.in",
+                    })
+                    .to(boton, {
+                        scale: 1.15,
+                        opacity: 0,
+                        duration: 0.45,
+                        ease: "power2.out",
+                    })
+                    .to(
+                        piezas,
+                        {
+                            opacity: 0,
+                            y: -12,
+                            duration: 0.4,
+                            stagger: 0.06,
+                            ease: "power2.in",
+                        },
+                        0.25,
+                    )
+                    .to(
+                        portadaSection,
+                        {
+                            opacity: 0,
+                            duration: 0.5,
+                            ease: "power2.in",
+                            onStart: abrirInvitacion,
+                            onComplete: () => {
+                                portadaSection?.remove();
+                                // Desvanecer la capa blanca suavemente
+                                gsap.to(capaBlanca, {
+                                    opacity: 0,
+                                    duration: 0.4,
+                                    ease: "power2.out",
+                                    onComplete: () => capaBlanca?.remove(),
+                                });
+                            },
+                        },
+                        0.75,
+                    );
+            });
+        });
+    }
+</script>

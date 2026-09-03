@@ -1,0 +1,154 @@
+---
+// src/layouts/Layout.astro
+import "../styles/global.css";
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="m-0 p-0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
+    <link rel="icon" type="image/png" href="/iconos/Anillos.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Great Vibes ya NO viene de Google: se carga local desde
+         /fonts/GreatVibes-Regular.ttf en global.css -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Forzar modo claro y evitar dark mode del navegador */
+      html {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        color-scheme: light only;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color-scheme: light only;
+        /* Fuera de la columna móvil (tablet / PC) */
+        background-color: #e9e4dd;
+      }
+
+      /* La invitación SIEMPRE se ve como celular: columna centrada */
+      main {
+        position: relative;
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        min-height: 100vh;
+        background-image: url("/imagenes/fondoprincipal.webp");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: #f7f5f2;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Polvo mágico sobre todo el fondo: dos capas de estrellitas
+         doradas, en mosaicos de distinto tamaño y con su propio
+         titileo, para que no se vea como un patrón repetido parejo.
+         Van detrás de las secciones (el orden en el DOM las pinta
+         primero), así el contenido siempre queda encima. */
+      main::before,
+      main::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-repeat: repeat;
+      }
+
+      main::before {
+        background-image:
+          radial-gradient(1.6px 1.6px at 8% 12%, rgba(247, 227, 174, 0.95), transparent 100%),
+          radial-gradient(1.2px 1.2px at 32% 28%, rgba(247, 227, 174, 0.8), transparent 100%),
+          radial-gradient(1.4px 1.4px at 58% 8%, rgba(247, 227, 174, 0.9), transparent 100%),
+          radial-gradient(1px 1px at 78% 22%, rgba(247, 227, 174, 0.7), transparent 100%),
+          radial-gradient(1.8px 1.8px at 92% 45%, rgba(247, 227, 174, 0.95), transparent 100%),
+          radial-gradient(1.2px 1.2px at 15% 62%, rgba(247, 227, 174, 0.75), transparent 100%),
+          radial-gradient(1.5px 1.5px at 44% 78%, rgba(247, 227, 174, 0.9), transparent 100%),
+          radial-gradient(1px 1px at 68% 88%, rgba(247, 227, 174, 0.65), transparent 100%),
+          radial-gradient(1.6px 1.6px at 88% 68%, rgba(247, 227, 174, 0.85), transparent 100%),
+          radial-gradient(1.1px 1.1px at 5% 92%, rgba(247, 227, 174, 0.7), transparent 100%);
+        background-size: 340px 340px;
+        animation: centelleo-fondo-uno 5.5s ease-in-out infinite;
+      }
+
+      main::after {
+        background-image:
+          radial-gradient(1.3px 1.3px at 20% 18%, rgba(201, 164, 92, 0.85), transparent 100%),
+          radial-gradient(1px 1px at 48% 5%, rgba(201, 164, 92, 0.7), transparent 100%),
+          radial-gradient(1.5px 1.5px at 72% 32%, rgba(201, 164, 92, 0.9), transparent 100%),
+          radial-gradient(1.1px 1.1px at 12% 48%, rgba(201, 164, 92, 0.65), transparent 100%),
+          radial-gradient(1.4px 1.4px at 38% 58%, rgba(201, 164, 92, 0.85), transparent 100%),
+          radial-gradient(1px 1px at 82% 62%, rgba(201, 164, 92, 0.6), transparent 100%),
+          radial-gradient(1.6px 1.6px at 62% 82%, rgba(201, 164, 92, 0.9), transparent 100%),
+          radial-gradient(1.2px 1.2px at 95% 90%, rgba(201, 164, 92, 0.75), transparent 100%);
+        background-size: 260px 260px;
+        background-position: 40px 60px;
+        animation: centelleo-fondo-dos 7s ease-in-out infinite 1.2s;
+      }
+
+      @keyframes centelleo-fondo-uno {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes centelleo-fondo-dos {
+        0%,
+        100% {
+          opacity: 0.35;
+        }
+        50% {
+          opacity: 0.85;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        main::before,
+        main::after {
+          animation: none;
+          opacity: 0.7;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen m-0 p-0">
+    <main class="m-0 p-0 overflow-x-hidden">
+      <slot />
+    </main>
+  </body>
+</html>

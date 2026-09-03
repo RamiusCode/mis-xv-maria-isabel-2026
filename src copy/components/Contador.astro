@@ -1,0 +1,154 @@
+---
+// src/components/Contador.astro
+// Cuenta regresiva "Falta poco" en cuatro casillas de vidrio, mismo
+// criterio que la card del Calendario: borde dorado fino + blur,
+// nada de cajas planas ni colores sueltos.
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const titulo = "Faltan";
+// Fecha y hora de los XV
+const fechaBoda = "2026-10-24T20:00:00";
+// ──────────────────────────────────────────────────────────────
+
+const casillas = [
+    { id: "dias", rotulo: "Días" },
+    { id: "horas", rotulo: "Hs." },
+    { id: "minutos", rotulo: "Min." },
+    { id: "segundos", rotulo: "Seg." },
+];
+---
+
+<!-- Cinzel: la misma romana grabada del resto de la invitación -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<div
+    id="contador"
+    class="w-full flex flex-col items-center contador-suelto"
+    data-fecha={fechaBoda}
+>
+    <p class="font-harry titulo-contador">{titulo}</p>
+
+    <div class="casillas-contador">
+        {
+            casillas.map((casilla) => (
+                <div class="casilla">
+                    <span id={casilla.id} class="numero-contador">
+                        00
+                    </span>
+                    <span class="rotulo-contador">{casilla.rotulo}</span>
+                </div>
+            ))
+        }
+    </div>
+</div>
+
+<style>
+    /* Separación con el Calendario, que va arriba en Invitacion.astro */
+    .contador-suelto {
+        margin-top: 2.6rem;
+    }
+
+    .titulo-contador {
+        color: #e4c179;
+        font-size: clamp(1.9rem, 9vw, 2.5rem);
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+        margin-bottom: 1.1rem;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85),
+            0 0 18px rgba(228, 193, 121, 0.28);
+    }
+
+    .casillas-contador {
+        display: flex;
+        justify-content: center;
+        gap: 0.55rem;
+        width: 100%;
+        max-width: 340px;
+    }
+
+    /* min-width 0: sin esto el rótulo más largo ensancha su casilla y las
+       cuatro dejan de medir igual. */
+    .casilla {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.15rem;
+        overflow: hidden;
+        border: 1px solid rgba(201, 164, 92, 0.55);
+        border-radius: 10px;
+        /* Sin velo encima: el pergamino se ve con su color de verdad */
+        background: url("/imagenes/fondopergamino.png") center / cover no-repeat;
+        box-shadow: 0 6px 16px rgba(10, 2, 4, 0.35);
+    }
+
+    /* Con el pergamino sin velo encima, el oro casi no se lee: los
+       números van en vino oscuro, como el paño del estandarte. */
+    .numero-contador {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        color: #6a0f16;
+        font-size: clamp(1.9rem, 9vw, 2.4rem);
+        line-height: 1.1;
+        /* Cifras de caja alta: las de estilo antiguo bailan de altura */
+        font-variant-numeric: lining-nums;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+
+    .rotulo-contador {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #7d1620;
+        font-size: clamp(0.78rem, 3.7vw, 0.94rem);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        line-height: 1.2;
+        white-space: nowrap;
+        margin-top: 0.15rem;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const bloque = document.getElementById("contador");
+        if (!bloque) return;
+
+        const objetivo = new Date(bloque.dataset.fecha as string).getTime();
+        const el = (id: string) => document.getElementById(id);
+
+        const pintar = () => {
+            const resta = Math.max(objetivo - Date.now(), 0);
+            const seg = Math.floor(resta / 1000);
+
+            const dias = Math.floor(seg / 86400);
+            const horas = Math.floor((seg % 86400) / 3600);
+            const minutos = Math.floor((seg % 3600) / 60);
+            const segundos = seg % 60;
+
+            const dosDigitos = (n: number) => n.toString().padStart(2, "0");
+
+            const d = el("dias");
+            const h = el("horas");
+            const m = el("minutos");
+            const s = el("segundos");
+            if (d) d.textContent = dias.toString();
+            if (h) h.textContent = dosDigitos(horas);
+            if (m) m.textContent = dosDigitos(minutos);
+            if (s) s.textContent = dosDigitos(segundos);
+        };
+
+        pintar();
+        setInterval(pintar, 1000);
+    });
+</script>

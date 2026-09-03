@@ -1,0 +1,641 @@
+---
+// src/components/Fecha.astro
+// Panel de la fecha, sin recuadro: sólo la escoba, el anuncio y la
+// fila día/número/mes con líneas arriba y abajo, todo suelto sobre el
+// vino del layout.
+//
+// El calendario y el contador NO se llaman desde acá: van sueltos en
+// Invitacion.astro, justo debajo de <Fecha />, para ubicarlos fácil.
+//
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const anuncio = "Acompáñanos este día tan especial";
+const anio = 2026;
+const mes = 10; // 1 = enero … 10 = octubre
+const dia = 24; // sábado 24 de octubre
+const hora = "8:00 PM";
+// ──────────────────────────────────────────────────────────────
+
+const NOMBRES_DIA = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+];
+const NOMBRES_MES = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+];
+
+const fechaXV = new Date(anio, mes - 1, dia);
+const diaSemana = NOMBRES_DIA[fechaXV.getDay()];
+const nombreMes = NOMBRES_MES[mes - 1];
+---
+
+<!-- Cinzel: la misma romana grabada del resto de la invitación -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<section
+    id="fecha-boda"
+    class="relative w-full overflow-hidden flex flex-col items-center px-6 py-8 text-center"
+>
+    <!-- Polvo de oro, igual que en el resto de las secciones -->
+    <span class="mota mota-1" aria-hidden="true"></span>
+    <span class="mota mota-2" aria-hidden="true"></span>
+    <span class="mota mota-3" aria-hidden="true"></span>
+    <span class="mota mota-4" aria-hidden="true"></span>
+
+    <!--
+       La escoba, arriba de todo. El span exterior es el que entra con
+       el scroll (GSAP); el vuelo continuo (CSS) va en la imagen, así
+       las dos animaciones no se pisan sobre el mismo transform.
+    -->
+    <span class="escoba-entrada">
+        <img
+            src="/imagenes/escoba.png"
+            alt=""
+            width="1063"
+            height="313"
+            aria-hidden="true"
+            class="escoba select-none"
+        />
+    </span>
+
+    <h2 class="font-great-vibes anuncio-fecha">{anuncio}</h2>
+
+    <p class="anio-fecha">{anio}</p>
+
+    <!-- Día · número · mes, con líneas arriba y abajo, sin caja -->
+    <div id="fila-fecha" class="fila-fecha">
+        <div class="columna-fecha">
+            <span class="linea-fecha"></span>
+            <span class="etiqueta-fecha">{diaSemana}</span>
+            <span class="linea-fecha"></span>
+        </div>
+
+        <p class="numero-fecha">{dia}</p>
+
+        <div class="columna-fecha">
+            <span class="linea-fecha"></span>
+            <span class="etiqueta-fecha">{nombreMes}</span>
+            <span class="linea-fecha"></span>
+        </div>
+
+        <!-- La varita, apuntando desde abajo hacia "OCTUBRE" -->
+        <div class="varita-magia" aria-hidden="true">
+            <img
+                src="/imagenes/barita.png"
+                alt=""
+                width="461"
+                height="646"
+                class="varita-img"
+            />
+            <span class="destello-punta" aria-hidden="true">
+                <span class="nucleo-destello"></span>
+                <span class="rayo r1"></span>
+                <span class="rayo r2"></span>
+                <span class="rayo r3"></span>
+                <span class="rayo r4"></span>
+                <span class="rayo r5"></span>
+                <span class="rayo r6"></span>
+                <span class="rayo r7"></span>
+            </span>
+            <span class="chispa-punta cp-1"></span>
+            <span class="chispa-punta cp-2"></span>
+            <span class="chispa-punta cp-3"></span>
+        </div>
+    </div>
+
+    <p class="hora-fecha">
+        <span
+            class="icono icono-oro reloj-fecha"
+            style="--ic:url('/imagenes/hora.png')"
+            aria-hidden="true"></span>
+        <span class="hora-texto">{hora}</span>
+    </p>
+</section>
+
+<style>
+    /* ── Polvo de oro ───────────────────────────────────────────── */
+    .mota {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: polvo-fecha 5.2s ease-in-out infinite;
+    }
+
+    .mota-1 {
+        left: 8%;
+        top: 14%;
+        animation-delay: 0s;
+    }
+
+    .mota-2 {
+        right: 9%;
+        top: 22%;
+        animation-delay: 1.3s;
+    }
+
+    .mota-3 {
+        left: 12%;
+        bottom: 30%;
+        animation-delay: 2.4s;
+    }
+
+    .mota-4 {
+        right: 10%;
+        bottom: 40%;
+        animation-delay: 3.4s;
+    }
+
+    @keyframes polvo-fecha {
+        0%,
+        100% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1);
+        }
+    }
+
+    /* La escoba, apoyada arriba del anuncio */
+    /* El span exterior lleva la medida y el aire de abajo */
+    .escoba-entrada {
+        display: block;
+        width: min(48%, 200px);
+        margin-bottom: 1.2rem;
+    }
+
+    .escoba {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 6px 14px rgba(10, 2, 4, 0.7));
+        /* Flota como si estuviera volando: sube y baja despacio,
+           con una inclinación leve, no un giro completo. */
+        animation: volar-escoba 5.5s ease-in-out infinite;
+    }
+
+    @keyframes volar-escoba {
+        0%,
+        100% {
+            transform: translateY(0) rotate(-3deg);
+        }
+        50% {
+            transform: translateY(-10px) rotate(3deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .escoba {
+            animation: none;
+        }
+    }
+
+    .anuncio-fecha {
+        color: #e4c179;
+        font-size: clamp(2rem, 10vw, 2.6rem);
+        line-height: 1.15;
+        margin-top: 0.6rem;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85);
+    }
+
+    .anio-fecha {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #dcc9ab;
+        font-size: clamp(1.1rem, 5vw, 1.4rem);
+        letter-spacing: 0.28em;
+        text-indent: 0.28em;
+        margin-top: 0.9rem;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    /* ── La fila día · número · mes, sin caja ─────────────────────
+       El ancho se mide una sola vez, así el número y las columnas de
+       los costados se llevan bien en cualquier pantalla. */
+    .fila-fecha {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4cqw;
+        width: min(100%, 380px);
+        container-type: inline-size;
+        margin-top: 1.4rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .columna-fecha {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.6cqw;
+        width: 27cqw;
+    }
+
+    .linea-fecha {
+        width: 100%;
+        height: 1px;
+        background: rgba(201, 164, 92, 0.75);
+    }
+
+    .etiqueta-fecha {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #e4c179;
+        font-size: 4.8cqw;
+        letter-spacing: 0.06em;
+        text-indent: 0.06em;
+        text-transform: uppercase;
+        line-height: 1.3;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.8);
+    }
+
+    /* ── La varita ──────────────────────────────────────────────
+       Abajo a la derecha, con la punta apuntando hacia "OCTUBRE".
+       Se mueve con un balanceo lento desde el mango (abajo a la
+       izquierda del PNG), como una muñeca haciendo magia despacio.
+       El destello y las chispas van en % del propio recuadro de la
+       varita, pegados a su punta (arriba a la derecha del PNG), así
+       se mueven pegados a ella y no quedan sueltos en otro lado. */
+    .varita-magia {
+        position: absolute;
+        bottom: -34cqw;
+        right: 3cqw;
+        width: 26cqw;
+        transform-origin: 18% 92%;
+        animation: mecer-varita 4.8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes mecer-varita {
+        0%,
+        100% {
+            transform: rotate(-6deg);
+        }
+        50% {
+            transform: rotate(6deg);
+        }
+    }
+
+    .varita-img {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.4));
+    }
+
+    /* El destello, pegado justo a la punta del PNG: un chispazo con
+       varios rayos de distinto largo y ángulo (no una cruz pareja),
+       para que el brillo se lea como algo natural, no geométrico. */
+    .destello-punta {
+        position: absolute;
+        top: -6%;
+        left: -8%;
+        width: 34%;
+        aspect-ratio: 1;
+        filter: drop-shadow(0 0 5px rgba(240, 208, 137, 0.8));
+        /* Misma duración que el balanceo de la varita (mecer-varita),
+           en fase: brilla fuerte cuando la varita cae a la izquierda
+           (-6deg) y se apaga cuando cae a la derecha (6deg). */
+        animation: intensidad-varita 4.8s ease-in-out infinite;
+    }
+
+    @keyframes intensidad-varita {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+    }
+
+    /* Halo detrás de todo, chico y concentrado */
+    .destello-punta::after {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        border-radius: 9999px;
+        background: radial-gradient(
+            circle,
+            rgba(240, 208, 137, 0.5) 0%,
+            rgba(240, 208, 137, 0) 72%
+        );
+        z-index: -1;
+    }
+
+    /* El núcleo: el punto brillante del que nacen los rayos */
+    .nucleo-destello {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16%;
+        aspect-ratio: 1;
+        margin: -8% 0 0 -8%;
+        border-radius: 9999px;
+        background: #fdf6e6;
+        box-shadow: 0 0 6px 1px rgba(253, 240, 208, 0.9);
+        animation: nucleo-pulso 2.4s ease-in-out infinite;
+    }
+
+    /* Los rayos: cada uno con su propio largo, grosor, ángulo y
+       demora — así titilan sin quedar todos en fase. */
+    .rayo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 1.4px;
+        background: linear-gradient(
+            90deg,
+            #fdf0d0 0%,
+            rgba(253, 240, 208, 0.5) 45%,
+            rgba(253, 240, 208, 0) 100%
+        );
+        transform-origin: left center;
+        animation: titilar-rayo 2.4s ease-in-out infinite;
+    }
+
+    .r1 {
+        --rot: -8deg;
+        width: 62%;
+        animation-delay: 0s;
+    }
+
+    .r2 {
+        --rot: 34deg;
+        width: 32%;
+        height: 1px;
+        animation-delay: 0.3s;
+    }
+
+    .r3 {
+        --rot: 96deg;
+        width: 46%;
+        animation-delay: 0.6s;
+    }
+
+    .r4 {
+        --rot: 146deg;
+        width: 22%;
+        height: 1px;
+        animation-delay: 0.9s;
+    }
+
+    .r5 {
+        --rot: 194deg;
+        width: 50%;
+        animation-delay: 1.2s;
+    }
+
+    .r6 {
+        --rot: 248deg;
+        width: 26%;
+        height: 1px;
+        animation-delay: 1.5s;
+    }
+
+    .r7 {
+        --rot: 300deg;
+        width: 36%;
+        animation-delay: 1.8s;
+    }
+
+    @keyframes nucleo-pulso {
+        0%,
+        100% {
+            opacity: 0.85;
+            transform: scale(0.94);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.06);
+        }
+    }
+
+    @keyframes titilar-rayo {
+        0%,
+        100% {
+            opacity: 0.65;
+            transform: rotate(var(--rot, 0deg)) scaleX(0.9);
+        }
+        50% {
+            opacity: 1;
+            transform: rotate(var(--rot, 0deg)) scaleX(1);
+        }
+    }
+
+    /* Chispitas de oro naciendo justo en la punta, sin alejarse mucho */
+    .chispa-punta {
+        position: absolute;
+        top: 2%;
+        left: 14%;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #f0d089;
+        box-shadow: 0 0 6px 1px rgba(240, 208, 137, 0.9);
+        opacity: 0;
+        animation: ascender-chispa 2.8s ease-out infinite;
+    }
+
+    .cp-1 {
+        animation-delay: 0s;
+    }
+
+    .cp-2 {
+        top: 12%;
+        left: 22%;
+        animation-delay: 0.9s;
+    }
+
+    .cp-3 {
+        top: -8%;
+        left: 4%;
+        animation-delay: 1.8s;
+    }
+
+    @keyframes ascender-chispa {
+        0% {
+            opacity: 0;
+            transform: translate(0, 0) scale(0.6);
+        }
+        25% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-5px, -22px) scale(0.3);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .varita-magia,
+        .destello-punta,
+        .nucleo-destello,
+        .rayo,
+        .chispa-punta {
+            animation: none;
+        }
+    }
+
+    /* El número del día, protagonista, en oro sólido: sin degradado */
+    .numero-fecha {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        color: #e4c179;
+        font-size: 20cqw;
+        line-height: 1;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85),
+            0 0 20px rgba(228, 193, 121, 0.3);
+    }
+
+    .hora-fecha {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        margin-top: 0.6rem;
+    }
+
+    .hora-texto {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #f6efe2;
+        font-size: clamp(1.15rem, 5.6vw, 1.4rem);
+        letter-spacing: 0.06em;
+        font-variant-numeric: lining-nums;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    /* El reloj se pinta de oro con máscara, no con filtros */
+    .icono-oro {
+        background-color: #e4c179;
+    }
+
+    .reloj-fecha {
+        width: 1.5rem;
+        height: 1.5rem;
+        flex: none;
+        filter: drop-shadow(0 2px 5px rgba(10, 2, 4, 0.6));
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const seccion = document.getElementById("fecha-boda");
+        if (!seccion) return;
+
+        /*
+           Todo entra en el mismo instante: no hay fila ni escalonado.
+           Lo que distingue a cada pieza es el gesto — la escoba baja,
+           las columnas se abren hacia sus costados, las líneas se
+           trazan desde el centro, el número asienta último — y todas
+           salen de un desenfoque leve que se disipa, que es lo que da
+           la sensación suave en vez del golpe seco.
+        */
+        /*
+           toggleActions = onEnter | onLeave | onEnterBack | onLeaveBack.
+           "restart" al entrar bajando la reproduce de cero cada vez;
+           "reset" al salir por arriba la deja escondida, lista para la
+           próxima bajada. Así se repite siempre que se pasa de nuevo.
+        */
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: seccion,
+                start: "top 82%",
+                toggleActions: "restart none none reset",
+            },
+        });
+
+        const suave = "power2.out";
+        const salida = { opacity: 0, filter: "blur(7px)" };
+        const juntos = 0; // todas las piezas arrancan acá
+
+        const anima = (sel: string, extra: object, duration: number) => {
+            const el = seccion.querySelector(sel);
+            if (el) tl.from(el, { ...salida, ...extra, duration, ease: suave }, juntos);
+        };
+
+        // La escoba baja despacio desde arriba
+        anima(".escoba-entrada", { y: -26, scale: 0.92 }, 1.3);
+
+        // El anuncio se abre apenas desde su propio centro
+        anima(".anuncio-fecha", { scale: 0.94 }, 1.4);
+
+        // El año asoma desde arriba
+        anima(".anio-fecha", { y: -14 }, 1.3);
+
+        // Las dos columnas se abren, cada una hacia su costado
+        const columnas = seccion.querySelectorAll(".columna-fecha");
+        if (columnas.length === 2) {
+            tl.from(columnas[0], { ...salida, x: -26, duration: 1.4, ease: suave }, juntos);
+            tl.from(columnas[1], { ...salida, x: 26, duration: 1.4, ease: suave }, juntos);
+        }
+
+        // Las líneas se trazan solas, abriéndose desde el centro
+        const lineas = seccion.querySelectorAll(".linea-fecha");
+        if (lineas.length) {
+            tl.from(
+                lineas,
+                {
+                    scaleX: 0,
+                    transformOrigin: "center center",
+                    duration: 1.5,
+                    ease: "power1.inOut",
+                },
+                juntos,
+            );
+        }
+
+        // El número: el gesto más lento, asienta último aunque salga junto
+        anima(".numero-fecha", { scale: 0.86 }, 1.7);
+
+        /*
+           La varita sólo se funde: su balanceo ya vive en un @keyframes
+           de CSS sobre el mismo transform, así que si GSAP también se lo
+           tocara, una animación le pisaría a la otra.
+        */
+        const varita = seccion.querySelector(".varita-magia");
+        if (varita) {
+            tl.from(varita, { opacity: 0, duration: 1.6, ease: suave }, juntos);
+        }
+
+        // La hora sube desde abajo, cerrando el bloque
+        anima(".hora-fecha", { y: 18 }, 1.5);
+    });
+</script>

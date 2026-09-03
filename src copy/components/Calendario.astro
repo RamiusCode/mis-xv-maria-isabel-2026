@@ -1,0 +1,179 @@
+---
+// src/components/Calendario.astro — El mes en grilla, con el día de los
+// XV marcado en oro. Recibe la fecha por props para no repetir la
+// cuenta en cada componente que lo usa.
+//
+// Sin marco: va suelto sobre el vino del layout, con Cormorant Garamond
+// en vez de la romana Cinzel — más suave, menos solemne.
+interface Props {
+    anio: number;
+    mes: number; // 1 = enero … 12 = diciembre
+    dia: number; // día a marcar
+}
+
+const { anio, mes, dia } = Astro.props;
+
+const DIAS_SEMANA = ["D", "L", "M", "M", "J", "V", "S"];
+const NOMBRES_MES = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+];
+
+const nombreMes = NOMBRES_MES[mes - 1];
+
+const arranque = new Date(anio, mes - 1, 1).getDay(); // huecos antes del 1
+const diasDelMes = new Date(anio, mes, 0).getDate();
+
+const celdas: (number | null)[] = [
+    ...Array(arranque).fill(null),
+    ...Array.from({ length: diasDelMes }, (_, i) => i + 1),
+];
+while (celdas.length % 7 !== 0) celdas.push(null);
+
+const semanas = Array.from({ length: celdas.length / 7 }, (_, i) =>
+    celdas.slice(i * 7, i * 7 + 7),
+);
+---
+
+<div id="calendario-suelto" class="calendario-suelto">
+    <img
+        src="/imagenes/sombrero2.png"
+        alt=""
+        width="598"
+        height="782"
+        aria-hidden="true"
+        class="sombrero-calendario select-none"
+    />
+
+    <p class="font-cormorant mes-calendario">{nombreMes} {anio}</p>
+
+    <span class="linea-calendario"></span>
+
+    <div class="almanaque">
+        <div class="fila-semana encabezado-almanaque">
+            {DIAS_SEMANA.map((letra) => <span class="celda-almanaque">{letra}</span>)}
+        </div>
+
+        {
+            semanas.map((semana) => (
+                <div class="fila-semana">
+                    {semana.map((numero) => (
+                        <span
+                            class:list={[
+                                "font-cormorant celda-almanaque",
+                                numero === dia && "dia-marcado",
+                            ]}
+                        >
+                            {numero ?? ""}
+                        </span>
+                    ))}
+                </div>
+            ))
+        }
+    </div>
+</div>
+
+<style>
+    /* Card de vidrio: un borde dorado fino y blur detrás, sin volutas
+       ni filete doble — mucho más sobrio que el marco de la carta. */
+    .calendario-suelto {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        container-type: inline-size;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8% 6% 7%;
+        border: 1px solid rgba(201, 164, 92, 0.5);
+        border-radius: 14px;
+        background: rgba(58, 12, 16, 0.28);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow:
+            0 8px 26px rgba(10, 2, 4, 0.35),
+            0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+    }
+
+    .sombrero-calendario {
+        width: min(20%, 76px);
+        height: auto;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 5px 12px rgba(10, 2, 4, 0.7));
+    }
+
+    .mes-calendario {
+        color: #e4c179;
+        font-style: italic;
+        font-size: 5.4cqw;
+        letter-spacing: 0.08em;
+        text-indent: 0.08em;
+        text-transform: uppercase;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.75);
+    }
+
+    .linea-calendario {
+        width: 34cqw;
+        height: 1px;
+        margin-top: 1.6cqw;
+        background: rgba(201, 164, 92, 0.6);
+    }
+
+    .almanaque {
+        width: 100%;
+        margin-top: 3.4cqw;
+    }
+
+    .fila-semana {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .celda-almanaque {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 9cqw;
+        font-size: 5.4cqw;
+        color: #e9d9b8;
+    }
+
+    .encabezado-almanaque .celda-almanaque {
+        font-weight: 600;
+        color: #dcc9ab;
+        font-size: 5cqw;
+    }
+
+    /* El día de los XV, en oro sobre el vino, sin degradado */
+    .dia-marcado {
+        position: relative;
+        z-index: 0;
+        color: #3a0c10;
+        font-weight: 600;
+    }
+
+    .dia-marcado::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 8.6cqw;
+        height: 8.6cqw;
+        margin: -4.3cqw 0 0 -4.3cqw;
+        border-radius: 9999px;
+        background: #dbb164;
+        box-shadow: 0 0 10px rgba(201, 164, 92, 0.5);
+        z-index: -1;
+    }
+</style>

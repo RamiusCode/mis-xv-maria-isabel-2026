@@ -1,0 +1,333 @@
+---
+// src/components/NombresFlores.astro — Primera sección de la invitación.
+//
+// Es el estandarte de Hogwarts colgado sobre el fondo del layout:
+//   marco.png    → el marco dorado con borlas y punta abajo
+//   sombrero.png → el sombrero seleccionador con el escudo "XV", adentro
+//   y debajo, los renglones: Mis · XV · Años · el nombre
+//
+// El fondo NO se toca acá: ya lo pone Layout.astro.
+//
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const nombre = "María Isabel";
+// ──────────────────────────────────────────────────────────────
+---
+
+<!-- Cinzel: la romana grabada que pide este estilo de estandarte -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&display=swap"
+    rel="stylesheet"
+/>
+
+<section
+    id="arco-novios"
+    class="relative w-full overflow-hidden flex flex-col items-center justify-center py-4"
+>
+    <!-- Chispas doradas flotando alrededor del estandarte -->
+    <span class="chispa chispa-1" aria-hidden="true"></span>
+    <span class="chispa chispa-2" aria-hidden="true"></span>
+    <span class="chispa chispa-3" aria-hidden="true"></span>
+    <span class="chispa chispa-4" aria-hidden="true"></span>
+    <span class="chispa chispa-5" aria-hidden="true"></span>
+    <span class="chispa chispa-6" aria-hidden="true"></span>
+
+    <!--
+       El estandarte se mide una sola vez y todo lo de adentro se calcula
+       en cqw (ancho del marco), así el bloque entero se ve igual en
+       celular, tablet y computadora: nunca se desarma.
+    -->
+    <div id="estandarte" class="marco-wrap">
+        <img
+            src="/imagenes/marco.png"
+            alt=""
+            width="947"
+            height="1707"
+            aria-hidden="true"
+            class="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+        />
+
+        <!-- Paño oscuro del estandarte, por dentro del filete dorado -->
+        <div class="pano" aria-hidden="true"></div>
+
+        <div class="contenido">
+            <img
+                src="/imagenes/sombrero.png"
+                alt=""
+                width="765"
+                height="1035"
+                class="sombrero select-none"
+            />
+
+            <p class="renglon-mis">Mis</p>
+            <p class="numero-xv">XV</p>
+            <p class="renglon-anios">Años</p>
+
+            <h1 class="nombre-xv">{nombre}</h1>
+        </div>
+    </div>
+
+    <!-- Doble flecha: seguir bajando -->
+    <button
+        id="flecha-scroll"
+        type="button"
+        aria-label="Bajar"
+        class="cursor-pointer border-0 bg-transparent p-2 mt-1"
+    >
+        <svg
+            viewBox="0 0 40 30"
+            width="30"
+            height="23"
+            fill="none"
+            stroke="#c9a45c"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="drop-shadow-[0_3px_8px_rgba(20,3,6,0.6)]"
+        >
+            <polyline points="6,4 20,15 34,4"></polyline>
+            <polyline points="6,14 20,25 34,14"></polyline>
+        </svg>
+    </button>
+</section>
+
+<style>
+    /* ── El estandarte ──────────────────────────────────────────
+       El ancho sale del menor de dos límites: el ancho de la columna
+       y el alto libre de la pantalla. Así el marco entra completo
+       tanto en un celular alto como en una ventana de computadora. */
+    .marco-wrap {
+        position: relative;
+        width: min(94%, 74vh * 947 / 1707);
+        aspect-ratio: 947 / 1707;
+        /* Todo lo de adentro se mide contra este ancho */
+        container-type: inline-size;
+        filter: drop-shadow(0 12px 28px rgba(10, 2, 4, 0.55));
+    }
+
+    /* Paño del estandarte: sigue el contorno del marco (punta abajo) */
+    .pano {
+        position: absolute;
+        left: 17.5%;
+        right: 17.5%;
+        top: 3.6%;
+        bottom: 3.2%;
+        background: linear-gradient(
+            180deg,
+            rgba(74, 13, 22, 0.72) 0%,
+            rgba(46, 8, 14, 0.78) 55%,
+            rgba(28, 4, 9, 0.82) 100%
+        );
+        clip-path: polygon(0 0, 100% 0, 100% 81%, 50% 100%, 0 81%);
+        pointer-events: none;
+    }
+
+    /* ── Contenido de adentro ──────────────────────────────────── */
+    .contenido {
+        position: absolute;
+        left: 19%;
+        right: 19%;
+        top: 4.5%;
+        bottom: 4.5%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .sombrero {
+        width: 44cqw;
+        height: auto;
+        margin-top: 8cqw;
+        filter: drop-shadow(0 6px 14px rgba(10, 2, 4, 0.6));
+    }
+
+    /* "Mis" y "Años": versalitas chicas, doradas y bien separadas */
+    .renglon-mis,
+    .renglon-anios {
+        font-family: "Cinzel", serif;
+        font-weight: 500;
+        color: #d7b170;
+        font-size: 6cqw;
+        letter-spacing: 0.34em;
+        text-indent: 0.34em;
+        line-height: 1.2;
+        text-transform: uppercase;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.7);
+    }
+
+    .renglon-mis {
+        margin-top: 3cqw;
+    }
+
+    .renglon-anios {
+        margin-top: 1.2cqw;
+    }
+
+    /* El XV grande, en oro pulido */
+    .numero-xv {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        font-size: 17cqw;
+        line-height: 1.05;
+        letter-spacing: 0.06em;
+        text-indent: 0.06em;
+        margin-top: 0.6cqw;
+        background: linear-gradient(
+            180deg,
+            #f7e3ae 0%,
+            #d9b063 48%,
+            #a97c36 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 3px 8px rgba(10, 2, 4, 0.75));
+    }
+
+    /* El nombre: cursiva Great Vibes en oro parejo, sin degradado.
+       El color es uno solo de arriba a abajo; el relieve lo dan las
+       sombras: un filo oscuro pegado a la letra, una sombra de
+       profundidad y un halo cálido apenas insinuado. */
+    .nombre-xv {
+        font-family: "Great Vibes", cursive;
+        font-weight: 400;
+        font-size: 13cqw;
+        line-height: 1.2;
+        padding-bottom: 0.1em;
+        margin-top: 9cqw;
+        color: #e4c179;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85),
+            0 0 20px rgba(228, 193, 121, 0.3);
+    }
+
+    /* ── Chispas ───────────────────────────────────────────────── */
+    .chispa {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: brillo 4.6s ease-in-out infinite;
+    }
+
+    .chispa-1 {
+        left: 8%;
+        top: 18%;
+        animation-delay: 0.2s;
+    }
+    .chispa-2 {
+        right: 9%;
+        top: 26%;
+        animation-delay: 1.1s;
+    }
+    .chispa-3 {
+        left: 6%;
+        top: 52%;
+        animation-delay: 2s;
+    }
+    .chispa-4 {
+        right: 7%;
+        top: 60%;
+        animation-delay: 2.9s;
+    }
+    .chispa-5 {
+        left: 12%;
+        top: 78%;
+        animation-delay: 3.6s;
+    }
+    .chispa-6 {
+        right: 13%;
+        top: 84%;
+        animation-delay: 4.1s;
+    }
+
+    @keyframes brillo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .chispa,
+        #flecha-scroll {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const estandarte = document.getElementById("estandarte");
+        const flecha = document.getElementById("flecha-scroll");
+        if (!estandarte) return;
+
+        // El marco baja como si lo colgaran de las borlas...
+        gsap.from(estandarte, {
+            scrollTrigger: { trigger: estandarte, start: "top 88%" },
+            opacity: 0,
+            y: -36,
+            duration: 1,
+            ease: "power3.out",
+        });
+
+        // ...y recién después aparece lo que lleva escrito adentro.
+        const contenido = estandarte.querySelector(".contenido");
+        if (contenido) {
+            gsap.from(Array.from(contenido.children), {
+                scrollTrigger: { trigger: estandarte, start: "top 88%" },
+                opacity: 0,
+                y: 22,
+                duration: 0.8,
+                stagger: 0.14,
+                delay: 0.45,
+                ease: "power2.out",
+            });
+        }
+
+        if (flecha) {
+            gsap.fromTo(
+                flecha,
+                { opacity: 0 },
+                {
+                    scrollTrigger: { trigger: estandarte, start: "top 88%" },
+                    opacity: 1,
+                    duration: 0.8,
+                    delay: 1.4,
+                    ease: "power2.out",
+                },
+            );
+
+            // Flota despacio para que se lea como "seguí bajando"
+            gsap.to(flecha, {
+                y: 8,
+                duration: 1.4,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+            });
+
+            flecha.addEventListener("click", () => {
+                const alto = window.innerHeight;
+                window.scrollTo({ top: alto * 0.92, behavior: "smooth" });
+            });
+        }
+    });
+</script>

@@ -1,0 +1,114 @@
+---
+// src/components/Calendario.astro — El mes en grilla, con el día de los
+// XV marcado en oro. Recibe la fecha por props para no repetir la
+// cuenta en cada componente que lo usa.
+interface Props {
+    anio: number;
+    mes: number; // 1 = enero … 12 = diciembre
+    dia: number; // día a marcar
+}
+
+const { anio, mes, dia } = Astro.props;
+
+const DIAS_SEMANA = ["D", "L", "M", "M", "J", "V", "S"];
+
+const arranque = new Date(anio, mes - 1, 1).getDay(); // huecos antes del 1
+const diasDelMes = new Date(anio, mes, 0).getDate();
+
+const celdas: (number | null)[] = [
+    ...Array(arranque).fill(null),
+    ...Array.from({ length: diasDelMes }, (_, i) => i + 1),
+];
+while (celdas.length % 7 !== 0) celdas.push(null);
+
+const semanas = Array.from({ length: celdas.length / 7 }, (_, i) =>
+    celdas.slice(i * 7, i * 7 + 7),
+);
+---
+
+<!-- Cinzel: la misma romana grabada del resto de la invitación -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<div class="almanaque">
+    <div class="fila-semana encabezado-almanaque">
+        {DIAS_SEMANA.map((letra) => <span class="celda-almanaque">{letra}</span>)}
+    </div>
+
+    {
+        semanas.map((semana) => (
+            <div class="fila-semana">
+                {semana.map((numero) => (
+                    <span
+                        class:list={[
+                            "celda-almanaque",
+                            numero === dia && "dia-marcado",
+                        ]}
+                    >
+                        {numero ?? ""}
+                    </span>
+                ))}
+            </div>
+        ))
+    }
+</div>
+
+<style>
+    .almanaque {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        container-type: inline-size;
+        padding: 3cqw 2.6cqw 3.4cqw;
+        border: 1px solid rgba(201, 164, 92, 0.55);
+        border-radius: 4px;
+        background: rgba(10, 2, 4, 0.25);
+    }
+
+    .fila-semana {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .celda-almanaque {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 8.6cqw;
+        font-family: "Cinzel", serif;
+        font-size: 3.6cqw;
+        color: #e9d9b8;
+    }
+
+    .encabezado-almanaque .celda-almanaque {
+        font-weight: 600;
+        color: #e4c179;
+        letter-spacing: 0.04em;
+    }
+
+    /* El día de los XV, en oro sobre el vino */
+    .dia-marcado {
+        position: relative;
+        z-index: 0;
+        color: #3a0c10;
+        font-weight: 700;
+    }
+
+    .dia-marcado::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 7.4cqw;
+        height: 7.4cqw;
+        margin: -3.7cqw 0 0 -3.7cqw;
+        border-radius: 9999px;
+        background: linear-gradient(180deg, #f0d089 0%, #c9a45c 100%);
+        box-shadow: 0 0 10px rgba(201, 164, 92, 0.5);
+        z-index: -1;
+    }
+</style>

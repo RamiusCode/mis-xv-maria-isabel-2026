@@ -1,0 +1,256 @@
+---
+// src/components/Despedida.astro
+// Cierre: el mensaje final en card dorada, un corazón como divisor,
+// el llamado a confirmar y el botón — sin foto de fondo, todo texto
+// sobre el vino del layout, con las fuentes del resto del sitio.
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const parrafo1 =
+    "Con la bendición de Dios y el amor de toda mi familia, me siento muy feliz de llegar a este momento tan especial de mi vida. Ahora empieza un camino lleno de sueños e ilusiones que, con mucha fe, humildad y esperanza, deseo cumplir. Quisiera, con inmensa alegría, compartir este comienzo de esta bella etapa junto a todos ustedes.";
+
+const parrafo2 =
+    "Tu presencia es muy importante para mí. Por favor, confirma tu asistencia para compartir juntos este día tan especial.";
+
+const llamado = "Por favor, haz clic para confirmar asistencia";
+
+// TODO: verificar que este sea el WhatsApp correcto para confirmar
+const whatsapp = "59163001482";
+const mensajeWhatsapp =
+    "Confirmo mi asistencia a los XV años de María Isabel. ¡Nos vemos el sábado 24 de octubre!";
+const enlaceConfirmar = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensajeWhatsapp)}`;
+const textoBoton = "Confirmar Asistencia";
+// ──────────────────────────────────────────────────────────────
+---
+
+<!-- Cinzel: la misma romana grabada del resto de la invitación -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<section id="despedida" class="relative w-full overflow-hidden">
+    <!-- Polvo de oro, igual que en el resto de las secciones -->
+    <span class="mota mota-1" aria-hidden="true"></span>
+    <span class="mota mota-2" aria-hidden="true"></span>
+    <span class="mota mota-3" aria-hidden="true"></span>
+    <span class="mota mota-4" aria-hidden="true"></span>
+
+    <div
+        id="bloque-despedida"
+        class="relative flex flex-col items-center px-7 py-14 text-center"
+    >
+        <!-- El mensaje, en card de trazo dorado -->
+        <div id="card-despedida" class="card-despedida">
+            <p class="parrafo-despedida">{parrafo1}</p>
+
+            <div class="divisor-corazon" aria-hidden="true">
+                <span class="linea-divisor"></span>
+                <span class="corazon-divisor">♥</span>
+                <span class="linea-divisor"></span>
+            </div>
+
+            <p class="parrafo-despedida">{parrafo2}</p>
+        </div>
+
+        <p class="llamado-despedida">{llamado}</p>
+
+        <!-- Confirmar asistencia: mismo botón que "Ver ubicación" -->
+        <a
+            href={enlaceConfirmar}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="boton-confirmar"
+        >
+            <img
+                src="/imagenes/ubicacion.png"
+                alt=""
+                width="1080"
+                height="290"
+                aria-hidden="true"
+                class="boton-confirmar-medalla select-none"
+            />
+            <span class="boton-confirmar-texto">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="check-confirmar">
+                    <path
+                        d="M5 13l4 4L19 7"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                </svg>
+                <span class="boton-confirmar-palabra">{textoBoton}</span>
+            </span>
+        </a>
+    </div>
+</section>
+
+<style>
+    /* ── Polvo de oro ───────────────────────────────────────────── */
+    .mota {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: polvo-despedida 5.2s ease-in-out infinite;
+    }
+
+    .mota-1 {
+        left: 8%;
+        top: 12%;
+        animation-delay: 0s;
+    }
+
+    .mota-2 {
+        right: 9%;
+        top: 20%;
+        animation-delay: 1.3s;
+    }
+
+    .mota-3 {
+        left: 11%;
+        bottom: 22%;
+        animation-delay: 2.4s;
+    }
+
+    .mota-4 {
+        right: 10%;
+        bottom: 30%;
+        animation-delay: 3.4s;
+    }
+
+    @keyframes polvo-despedida {
+        0%,
+        100% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1);
+        }
+    }
+
+    #bloque-despedida {
+        container-type: inline-size;
+    }
+
+    /* El mensaje, card de trazo dorado, sin relleno terracota */
+    .card-despedida {
+        width: 100%;
+        max-width: 380px;
+        padding: 8% 7%;
+        border: 1px solid rgba(201, 164, 92, 0.55);
+        border-radius: 12px;
+        background: rgba(28, 5, 10, 0.25);
+        box-shadow: 0 8px 22px rgba(10, 2, 4, 0.35);
+    }
+
+    .parrafo-despedida {
+        font-family: "Callingstone", cursive;
+        color: #f6efe2;
+        font-size: 5.2cqw;
+        line-height: 1.85;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.7);
+    }
+
+    .divisor-corazon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.7rem;
+        margin: 1.6rem 0;
+    }
+
+    .linea-divisor {
+        width: 3.2rem;
+        height: 1px;
+        background: rgba(201, 164, 92, 0.6);
+    }
+
+    .corazon-divisor {
+        color: #7d1620;
+        font-size: 1.1rem;
+        text-shadow: 0 0 8px rgba(201, 164, 92, 0.35);
+    }
+
+    .llamado-despedida {
+        font-family: "Cinzel", serif;
+        font-style: italic;
+        font-weight: 600;
+        color: #e4c179;
+        font-size: 4.4cqw;
+        line-height: 1.6;
+        margin-top: 2rem;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    /*
+       El botón de confirmar: la misma placa (ubicacion.png) y el
+       mismo tratamiento que "Ver ubicación" en RecepcionSocial.
+    */
+    .boton-confirmar {
+        position: relative;
+        display: block;
+        width: min(94%, 360px);
+        margin-top: 1.6rem;
+        transition: transform 0.3s ease;
+    }
+
+    .boton-confirmar:hover {
+        transform: scale(1.04);
+    }
+
+    .boton-confirmar-medalla {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 8px 18px rgba(10, 2, 4, 0.5));
+    }
+
+    .boton-confirmar-texto {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0 13%;
+        white-space: nowrap;
+        transform: translateY(-8%);
+        color: #4b2e16;
+        font-family: "Callingstone", cursive;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: clamp(0.95rem, 4.6vw, 1.2rem);
+        letter-spacing: 0.01em;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+
+    .boton-confirmar-palabra {
+        white-space: nowrap;
+    }
+
+    .check-confirmar {
+        width: 1.15em;
+        height: 1.15em;
+        flex: none;
+        color: #7d1620;
+    }
+</style>
+
+<script>
+    import { animarEntrada } from "../scripts/animaciones";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const bloque = document.getElementById("bloque-despedida");
+        if (!bloque) return;
+
+        animarEntrada(bloque.children, bloque);
+    });
+</script>

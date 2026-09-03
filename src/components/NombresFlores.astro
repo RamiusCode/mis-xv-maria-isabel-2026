@@ -1,0 +1,359 @@
+---
+// src/components/NombresFlores.astro — Primera sección de la invitación.
+//
+// Es el estandarte de Hogwarts colgado sobre el fondo del layout:
+//   marco2.png   → el banner vino con marco dorado, ya trae el paño
+//                  adentro (no hace falta dibujarlo por CSS)
+//   sombrero.png → el sombrero seleccionador, adentro. Nada más.
+//
+// El fondo NO se toca acá: ya lo pone Layout.astro.
+---
+
+<section
+    id="arco-novios"
+    class="relative w-full overflow-hidden flex flex-col items-center justify-center py-4"
+>
+    <!-- Chispas doradas flotando alrededor del estandarte -->
+    <span class="chispa chispa-1" aria-hidden="true"></span>
+    <span class="chispa chispa-2" aria-hidden="true"></span>
+    <span class="chispa chispa-3" aria-hidden="true"></span>
+    <span class="chispa chispa-4" aria-hidden="true"></span>
+    <span class="chispa chispa-5" aria-hidden="true"></span>
+    <span class="chispa chispa-6" aria-hidden="true"></span>
+
+    <!--
+       El estandarte se mide una sola vez y todo lo de adentro se calcula
+       en cqw (ancho del marco), así el bloque entero se ve igual en
+       celular, tablet y computadora: nunca se desarma.
+    -->
+    <div id="estandarte" class="marco-wrap">
+        <img
+            src="/imagenes/marco2.png"
+            alt=""
+            width="866"
+            height="897"
+            aria-hidden="true"
+            class="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+        />
+
+        <div class="contenido">
+            <img
+                src="/imagenes/sombrero.png"
+                alt=""
+                width="765"
+                height="1035"
+                class="sombrero select-none"
+            />
+        </div>
+
+        <!--
+           Los pájaros, debajo del marco, volando a los costados. El
+           span exterior es el que entra deslizándose al hacer scroll
+           (GSAP); el vuelo en sí (CSS) va en la imagen de adentro,
+           así las dos animaciones no se pisan sobre el mismo transform.
+        -->
+        <span class="pajaro-entrada pajaro-entrada-izq">
+            <img
+                src="/imagenes/pajaro.png"
+                alt=""
+                width="660"
+                height="746"
+                aria-hidden="true"
+                class="pajaro-vuelo pajaro-vuelo-izq select-none"
+            />
+        </span>
+        <span class="pajaro-entrada pajaro-entrada-der">
+            <img
+                src="/imagenes/pajaro.png"
+                alt=""
+                width="660"
+                height="746"
+                aria-hidden="true"
+                class="pajaro-vuelo pajaro-vuelo-der select-none"
+            />
+        </span>
+    </div>
+
+    <!-- Doble flecha: seguir bajando -->
+    <button
+        id="flecha-scroll"
+        type="button"
+        aria-label="Bajar"
+        class="cursor-pointer border-0 bg-transparent p-2 mt-1"
+    >
+        <svg
+            viewBox="0 0 40 30"
+            width="30"
+            height="23"
+            fill="none"
+            stroke="#c9a45c"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="drop-shadow-[0_3px_8px_rgba(20,3,6,0.6)]"
+        >
+            <polyline points="6,4 20,15 34,4"></polyline>
+            <polyline points="6,14 20,25 34,14"></polyline>
+        </svg>
+    </button>
+</section>
+
+<style>
+    /* ── El estandarte ──────────────────────────────────────────
+       El ancho sale del menor de dos límites: el ancho de la columna
+       y el alto libre de la pantalla. Así el marco entra completo
+       tanto en un celular alto como en una ventana de computadora. */
+    .marco-wrap {
+        position: relative;
+        width: min(94%, 74vh * 866 / 897);
+        margin: 0 auto;
+        aspect-ratio: 866 / 897;
+        /* Todo lo de adentro se mide contra este ancho */
+        container-type: inline-size;
+        filter: drop-shadow(0 12px 28px rgba(10, 2, 4, 0.55));
+    }
+
+    /* ── Contenido de adentro ──────────────────────────────────── */
+    .contenido {
+        position: absolute;
+        /* La cadena y los borlones ocupan la franja de arriba; el paño
+           plano empieza más abajo que en el banner anterior */
+        left: 22%;
+        right: 22%;
+        top: 24%;
+        bottom: 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: center;
+    }
+
+    .sombrero {
+        width: 40cqw;
+        height: auto;
+        filter: drop-shadow(0 6px 14px rgba(10, 2, 4, 0.6));
+    }
+
+    /* Los pájaros, debajo del marco — no mueven nada más: son
+       absolutos dentro del propio marco-wrap. El "entrada" es el que
+       GSAP desliza al hacer scroll; el "vuelo" (adentro) es el
+       aleteo continuo en CSS, desfasado entre los dos. */
+    .pajaro-entrada {
+        position: absolute;
+        bottom: -10cqw;
+        width: 26cqw;
+    }
+
+    .pajaro-entrada-izq {
+        left: 0;
+    }
+
+    .pajaro-entrada-der {
+        right: 0;
+    }
+
+    .pajaro-vuelo {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 4px 10px rgba(10, 2, 4, 0.6));
+    }
+
+    .pajaro-vuelo-izq {
+        animation: volar-pajaro-izq 4s ease-in-out infinite;
+    }
+
+    .pajaro-vuelo-der {
+        animation: volar-pajaro-der 4.4s ease-in-out infinite 0.6s;
+    }
+
+    @keyframes volar-pajaro-izq {
+        0%,
+        100% {
+            transform: translateY(0) rotate(-5deg);
+        }
+        50% {
+            transform: translateY(-9px) rotate(5deg);
+        }
+    }
+
+    /* Mismo vuelo, con el scaleX(-1) del espejado metido en cada
+       paso: si se anima por fuera de la keyframe se pierde el espejo. */
+    @keyframes volar-pajaro-der {
+        0%,
+        100% {
+            transform: scaleX(-1) translateY(0) rotate(-5deg);
+        }
+        50% {
+            transform: scaleX(-1) translateY(-9px) rotate(5deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .pajaro-vuelo-izq,
+        .pajaro-vuelo-der {
+            animation: none;
+        }
+
+        .pajaro-vuelo-der {
+            transform: scaleX(-1);
+        }
+    }
+
+    /* ── Chispas ───────────────────────────────────────────────── */
+    .chispa {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: brillo 4.6s ease-in-out infinite;
+    }
+
+    .chispa-1 {
+        left: 8%;
+        top: 18%;
+        animation-delay: 0.2s;
+    }
+    .chispa-2 {
+        right: 9%;
+        top: 26%;
+        animation-delay: 1.1s;
+    }
+    .chispa-3 {
+        left: 6%;
+        top: 52%;
+        animation-delay: 2s;
+    }
+    .chispa-4 {
+        right: 7%;
+        top: 60%;
+        animation-delay: 2.9s;
+    }
+    .chispa-5 {
+        left: 12%;
+        top: 78%;
+        animation-delay: 3.6s;
+    }
+    .chispa-6 {
+        right: 13%;
+        top: 84%;
+        animation-delay: 4.1s;
+    }
+
+    @keyframes brillo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .chispa,
+        #flecha-scroll {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const estandarte = document.getElementById("estandarte");
+        const flecha = document.getElementById("flecha-scroll");
+        if (!estandarte) return;
+
+        /*
+           toggleActions = onEnter | onLeave | onEnterBack | onLeaveBack.
+           "restart" al entrar bajando la reproduce de cero cada vez;
+           "reset" al salir por arriba la deja escondida, lista para la
+           próxima bajada. Así se repite siempre que se pasa de nuevo.
+        */
+        const DISPARO = {
+            trigger: estandarte,
+            start: "top 88%",
+            toggleActions: "restart none none reset",
+        };
+
+        // El marco baja como si lo colgaran de las borlas...
+        gsap.from(estandarte, {
+            scrollTrigger: DISPARO,
+            opacity: 0,
+            y: -36,
+            duration: 1,
+            ease: "power3.out",
+        });
+
+        // ...y recién después el sombrero aparece como conjurado: gira
+        // y crece desde chico, no un simple fundido.
+        const sombrero = estandarte.querySelector(".sombrero");
+        if (sombrero) {
+            gsap.from(sombrero, {
+                scrollTrigger: DISPARO,
+                opacity: 0,
+                scale: 0.4,
+                rotate: -25,
+                duration: 0.9,
+                delay: 0.55,
+                ease: "back.out(1.7)",
+            });
+        }
+
+        // Los pájaros entran deslizándose desde su propio lado, los
+        // dos a la vez — llegan juntos, cada uno desde su costado.
+        const pajaroIzq = estandarte.querySelector(".pajaro-entrada-izq");
+        const pajaroDer = estandarte.querySelector(".pajaro-entrada-der");
+        if (pajaroIzq && pajaroDer) {
+            const entradaPajaros = {
+                scrollTrigger: DISPARO,
+                opacity: 0,
+                duration: 1.1,
+                delay: 1.2,
+                ease: "power3.out",
+            };
+            gsap.from(pajaroIzq, { ...entradaPajaros, x: -70 });
+            gsap.from(pajaroDer, { ...entradaPajaros, x: 70 });
+        }
+
+        if (flecha) {
+            gsap.fromTo(
+                flecha,
+                { opacity: 0 },
+                {
+                    scrollTrigger: DISPARO,
+                    opacity: 1,
+                    duration: 0.8,
+                    delay: 2,
+                    ease: "power2.out",
+                },
+            );
+
+            // Flota despacio para que se lea como "seguí bajando"
+            gsap.to(flecha, {
+                y: 8,
+                duration: 1.4,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+            });
+
+            flecha.addEventListener("click", () => {
+                const alto = window.innerHeight;
+                window.scrollTo({ top: alto * 0.92, behavior: "smooth" });
+            });
+        }
+    });
+</script>

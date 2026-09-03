@@ -1,0 +1,509 @@
+---
+// src/components/Dedicatoria.astro — La carta de Hogwarts.
+//
+// Sin pergamino: sobre el paño vino del fondo va sólo un trazo dorado
+// —marco doble, volutas de esquina y filigranas— con el texto en oro y
+// blanco cálido. Todo lo de adentro se mide en cqw (ancho del marco),
+// así el bloque se ve igual en celular, tablet y computadora.
+//
+// El fondo NO se toca acá: ya lo pone Layout.astro.
+//
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const colegio = ["COLEGIO HOGWARTS", "DE MAGIA Y HECHICERÍA"];
+const linea1 = "Tienen el honor de informarte";
+const linea2 = "que has sido elegido por el";
+const destacado = "Cáliz de Fuego";
+const linea3 = "para asistir a la celebración de los";
+const anios = "XV AÑOS";
+const preposicion = "de";
+const nombre = "María Isabel";
+// ──────────────────────────────────────────────────────────────
+---
+
+<!-- Cinzel: la misma romana grabada del estandarte -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<section
+    id="dedicatoria"
+    class="relative w-full overflow-hidden flex flex-col items-center justify-center py-4 px-5"
+>
+    <!-- Polvo de oro flotando alrededor de la carta -->
+    <span class="mota mota-1" aria-hidden="true"></span>
+    <span class="mota mota-2" aria-hidden="true"></span>
+    <span class="mota mota-3" aria-hidden="true"></span>
+    <span class="mota mota-4" aria-hidden="true"></span>
+
+    <!-- ── El marco de la carta ────────────────────────────────── -->
+    <article id="carta-hogwarts" class="marco-carta">
+        <!-- Trazo doble: la línea gruesa y, adentro, la hairline -->
+        <div class="filete" aria-hidden="true"></div>
+
+        <!-- Volutas en las cuatro esquinas -->
+        <svg class="voluta v-si" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-sd" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-ii" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+        <svg class="voluta v-id" viewBox="0 0 60 60" aria-hidden="true">
+            <path
+                d="M2 30 C2 14 14 2 30 2 M9 30 C9 18 18 9 30 9 M15 24 C19 20 23 18 27 17"
+            ></path>
+            <circle cx="12.5" cy="12.5" r="2"></circle>
+        </svg>
+
+        <!-- Rombos que cortan el filete arriba y abajo, al medio -->
+        <span class="rombo rombo-arriba" aria-hidden="true"></span>
+        <span class="rombo rombo-abajo" aria-hidden="true"></span>
+
+        <div class="carta">
+            <!-- Estallido de luz en el momento en que todo aparece -->
+            <div class="destello-revelacion" aria-hidden="true"></div>
+
+            <!-- La esfera, arriba de todo -->
+            <img
+                src="/imagenes/esfera.png"
+                alt=""
+                aria-hidden="true"
+                class="esfera select-none"
+            />
+
+            <p class="colegio">
+                {colegio.map((linea) => <span class="block">{linea}</span>)}
+            </p>
+
+            <!-- Filigrana que separa el encabezado del cuerpo -->
+            <svg class="filigrana" viewBox="0 0 220 18" aria-hidden="true">
+                <path
+                    d="M4 9 H84 M136 9 H216 M96 9 L110 3 L124 9 L110 15 Z M90 9 h-3 M130 9 h3"
+                ></path>
+            </svg>
+
+            <p class="cuerpo">
+                <span class="block">{linea1}</span>
+                <span class="block">{linea2}</span>
+            </p>
+
+            <p class="destacado">{destacado}</p>
+
+            <p class="cuerpo cuerpo-cierre">{linea3}</p>
+
+            <p class="anios">{anios}</p>
+            <p class="de font-cormorant">{preposicion}</p>
+            <h2 class="nombre-dedicatoria">{nombre}</h2>
+        </div>
+    </article>
+</section>
+
+<style>
+    /* ── El marco ───────────────────────────────────────────────
+       El pergamino como fondo, tal cual la imagen: por eso el texto
+       de acá en adelante va en tinta oscura, no en oro claro. */
+    .marco-carta {
+        position: relative;
+        width: min(100%, 380px);
+        padding: 13% 8.5% 11%;
+        container-type: inline-size;
+        border: 1px solid rgba(201, 164, 92, 0.9);
+        /* Estirado a todo el alto de la carta, sin repetir */
+        background: url("/imagenes/pergamino2.png") center / 100% 100% no-repeat;
+        box-shadow:
+            0 0 26px rgba(201, 164, 92, 0.14),
+            0 14px 34px rgba(10, 2, 4, 0.45);
+    }
+
+    /* La hairline de adentro: el trazo doble */
+    .filete {
+        position: absolute;
+        inset: 2.6cqw;
+        pointer-events: none;
+        border: 1px solid rgba(201, 164, 92, 0.45);
+    }
+
+    /* Volutas de esquina, montadas sobre el filete */
+    .voluta {
+        position: absolute;
+        width: 10cqw;
+        height: 10cqw;
+        fill: none;
+        stroke: #c9a45c;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        pointer-events: none;
+        filter: drop-shadow(0 1px 3px rgba(10, 2, 4, 0.6));
+    }
+
+    .voluta circle {
+        fill: #c9a45c;
+        stroke: none;
+    }
+
+    .v-si {
+        top: 2.6cqw;
+        left: 2.6cqw;
+    }
+
+    .v-sd {
+        top: 2.6cqw;
+        right: 2.6cqw;
+        transform: scaleX(-1);
+    }
+
+    .v-ii {
+        bottom: 2.6cqw;
+        left: 2.6cqw;
+        transform: scaleY(-1);
+    }
+
+    .v-id {
+        bottom: 2.6cqw;
+        right: 2.6cqw;
+        transform: scale(-1, -1);
+    }
+
+    /* Rombos al medio del borde, como broches del marco */
+    .rombo {
+        position: absolute;
+        left: 50%;
+        width: 3.4cqw;
+        height: 3.4cqw;
+        background: #c9a45c;
+        transform: translate(-50%, -50%) rotate(45deg);
+        box-shadow: 0 0 8px rgba(201, 164, 92, 0.5);
+        pointer-events: none;
+    }
+
+    .rombo-arriba {
+        top: 0;
+    }
+
+    .rombo-abajo {
+        top: 100%;
+    }
+
+    /* ── Lo escrito ─────────────────────────────────────────────── */
+    .carta {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* La esfera que corona la carta */
+    .esfera {
+        width: 30cqw;
+        height: auto;
+    }
+
+    /* El estallido: un flash dorado, detrás de todo el texto, que
+       ilumina el instante en que aparece la carta. Arranca oculto.
+       z-index negativo: así pinta detrás del texto (estático) de
+       adentro, aunque esté antes en el DOM. */
+    .destello-revelacion {
+        position: absolute;
+        inset: -15% -10%;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            rgba(240, 208, 137, 0.65) 0%,
+            rgba(240, 208, 137, 0.25) 45%,
+            rgba(240, 208, 137, 0) 72%
+        );
+        opacity: 0;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* "COLEGIO HOGWARTS…": en Callingstone, la decorativa del proyecto.
+       Al ser una letra de fantasía va con menos tracking que la romana
+       y algo más de cuerpo, si no se lee chica. */
+    .colegio {
+        font-family: "Callingstone", cursive;
+        font-weight: 700;
+        color: #7c4a1e;
+        font-size: 5.2cqw;
+        letter-spacing: 0.07em;
+        text-indent: 0.07em;
+        line-height: 1.9;
+        margin-top: 7cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.6);
+    }
+
+    /* Filigrana separadora */
+    .filigrana {
+        width: 66cqw;
+        height: auto;
+        margin-top: 4.5cqw;
+        fill: none;
+        stroke: #c9a45c;
+        stroke-width: 1.3;
+        stroke-linecap: round;
+    }
+
+    /* El cuerpo, en Callingstone (minúsculas) y blanco cálido: es lo
+       que se tiene que leer. Al ser decorativa va más grande y con
+       más aire entre renglones que la romana. */
+    .cuerpo {
+        font-family: "Callingstone", cursive;
+        color: #4b2e16;
+        font-size: 5.2cqw;
+        line-height: 1.75;
+        letter-spacing: 0.02em;
+        margin-top: 5.5cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.6);
+    }
+
+    .cuerpo-cierre {
+        margin-top: 3.5cqw;
+    }
+
+    /* "Cáliz de Fuego": el oro más claro de toda la carta */
+    .destacado {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        color: #9b3512;
+        font-size: 6.6cqw;
+        letter-spacing: 0.09em;
+        text-indent: 0.09em;
+        line-height: 1.4;
+        margin-top: 3.5cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+
+    /* "XV AÑOS" grabado en oro */
+    .anios {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        color: #8a6222;
+        font-size: 12cqw;
+        letter-spacing: 0.12em;
+        text-indent: 0.12em;
+        line-height: 1.2;
+        margin-top: 6cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.6);
+    }
+
+    .de {
+        color: #6b4a28;
+        font-size: 8cqw;
+        font-style: italic;
+        letter-spacing: 0.05em;
+        margin-top: 1.5cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+
+    /* El nombre, en la misma cursiva del estandarte, ahora en oro
+       viejo (no oro claro): sobre el papel el claro se lavaba. */
+    .nombre-dedicatoria {
+        font-family: "Great Vibes", cursive;
+        font-weight: 400;
+        color: #8f6420;
+        font-size: 19cqw;
+        line-height: 1.15;
+        padding-bottom: 0.12em;
+        margin-top: 1cqw;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.6);
+    }
+
+    /* ── Polvo de oro ───────────────────────────────────────────── */
+    .mota {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: polvo 5.2s ease-in-out infinite;
+    }
+
+    .mota-1 {
+        left: 7%;
+        top: 22%;
+        animation-delay: 0s;
+    }
+
+    .mota-2 {
+        right: 9%;
+        top: 30%;
+        animation-delay: 1.1s;
+    }
+
+    .mota-3 {
+        left: 11%;
+        bottom: 24%;
+        animation-delay: 2.2s;
+    }
+
+    .mota-4 {
+        right: 7%;
+        bottom: 18%;
+        animation-delay: 3.1s;
+    }
+
+
+    @keyframes polvo {
+        0%,
+        100% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mota {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const carta = document.getElementById("carta-hogwarts");
+        if (!carta) return;
+
+        /*
+           toggleActions = onEnter | onLeave | onEnterBack | onLeaveBack.
+           "restart" al entrar bajando la reproduce de cero cada vez;
+           "reset" al salir por arriba la deja escondida, lista para la
+           próxima bajada. Así se repite siempre que se pasa de nuevo.
+        */
+        const disparo = {
+            trigger: carta,
+            start: "top 82%",
+            toggleActions: "restart none none reset",
+        };
+
+        // La filigrana se dibuja como si una pluma la trazara: el
+        // trazo arranca invisible y se completa de punta a punta.
+        const trazoFiligrana = carta.querySelector<SVGPathElement>(".filigrana path");
+        if (trazoFiligrana) {
+            const largo = trazoFiligrana.getTotalLength();
+            gsap.set(trazoFiligrana, { strokeDasharray: largo, strokeDashoffset: largo });
+        }
+
+        const tl = gsap.timeline({ scrollTrigger: disparo });
+
+        // El marco de la carta se posa primero, sin apuro...
+        tl.from(carta, {
+            opacity: 0,
+            y: 30,
+            scale: 0.96,
+            duration: 1.1,
+            ease: "power2.out",
+        });
+
+        /*
+           ...y desde ese mismo instante entra TODO junto: no hay fila
+           ni escalonado. Lo que distingue a cada elemento no es el
+           momento sino el gesto — uno baja, otro sube, otro se traza —
+           y todos salen de un desenfoque leve que se disipa, que es lo
+           que da la sensación suave en vez del rebote seco.
+        */
+        tl.addLabel("revelar", "-=0.75");
+
+        const suave = "power2.out";
+        const salida = { opacity: 0, filter: "blur(7px)" };
+
+        const destello = carta.querySelector(".destello-revelacion");
+        if (destello) {
+            tl.fromTo(
+                destello,
+                { opacity: 0, scale: 0.55 },
+                { opacity: 0.75, scale: 1.45, duration: 1, ease: "sine.out" },
+                "revelar",
+            ).to(destello, { opacity: 0, duration: 1.1, ease: "sine.inOut" }, "revelar+=0.7");
+        }
+
+        // La esfera baja despacio desde arriba
+        const esfera = carta.querySelector(".esfera");
+        if (esfera) {
+            tl.from(
+                esfera,
+                { ...salida, y: -26, scale: 0.9, duration: 1.3, ease: suave },
+                "revelar",
+            );
+        }
+
+        // El encabezado se abre apenas, creciendo desde su propio centro
+        const colegio = carta.querySelector(".colegio");
+        if (colegio) {
+            tl.from(colegio, { ...salida, scale: 0.94, duration: 1.3, ease: suave }, "revelar");
+        }
+
+        // La filigrana se traza sola, de punta a punta
+        if (trazoFiligrana) {
+            tl.to(
+                trazoFiligrana,
+                { strokeDashoffset: 0, duration: 1.4, ease: "power1.inOut" },
+                "revelar",
+            );
+        }
+
+        // Los renglones del cuerpo suben apenas
+        const cuerpo1 = carta.querySelector(".cuerpo:not(.cuerpo-cierre)");
+        if (cuerpo1) {
+            tl.from(cuerpo1, { ...salida, y: 14, duration: 1.3, ease: suave }, "revelar");
+        }
+
+        const cierre = carta.querySelector(".cuerpo-cierre");
+        if (cierre) {
+            tl.from(cierre, { ...salida, y: 14, duration: 1.4, ease: suave }, "revelar");
+        }
+
+        // "Cáliz de Fuego" crece apenas, con más aire que el resto
+        const destacado = carta.querySelector(".destacado");
+        if (destacado) {
+            tl.from(destacado, { ...salida, scale: 0.9, duration: 1.5, ease: suave }, "revelar");
+        }
+
+        // "XV AÑOS": el gesto más lento de todos, para que asiente último
+        const anios = carta.querySelector(".anios");
+        if (anios) {
+            tl.from(anios, { ...salida, scale: 0.88, duration: 1.6, ease: suave }, "revelar");
+        }
+
+        const de = carta.querySelector(".de");
+        if (de) {
+            tl.from(de, { ...salida, duration: 1.3, ease: suave }, "revelar");
+        }
+
+        // El nombre, con el asiento más largo y suave de la carta
+        const nombre = carta.querySelector(".nombre-dedicatoria");
+        if (nombre) {
+            tl.from(
+                nombre,
+                { ...salida, y: 12, scale: 0.92, duration: 1.7, ease: suave },
+                "revelar",
+            );
+        }
+    });
+</script>

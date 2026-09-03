@@ -1,0 +1,287 @@
+---
+// src/components/RecepcionSocial.astro
+// Recepción social: mismo diseño que la ceremonia religiosa, con el arco de
+// la fiesta en lugar de la iglesia.
+// ── DATOS EDITABLES ───────────────────────────────────────────
+const titulo = "Recepción Social";
+const hora = "16:30";
+const salon = ["EL GRAN COMEDOR", "DE HOGWARTS"];
+const direccion = [
+    "Av. Comavi c/A N° 1",
+    "entre 4to y 5to anillo",
+    "Frente a ex Banco BASSIL",
+];
+const mapa = "https://maps.app.goo.gl/optHBhjQMEwJr1Mx7";
+const textoBoton = "Ver ubicación";
+// El castillo, no el arco de flores de la plantilla vieja
+const dibujo = "/imagenes/recepcion.png";
+// ──────────────────────────────────────────────────────────────
+---
+
+<!-- Cinzel: la misma romana grabada del resto de la invitación -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+/>
+
+<section id="recepcion-social" class="relative w-full overflow-hidden">
+    <!-- Polvo de oro, igual que en el resto de las secciones -->
+    <span class="mota mota-1" aria-hidden="true"></span>
+    <span class="mota mota-2" aria-hidden="true"></span>
+    <span class="mota mota-3" aria-hidden="true"></span>
+    <span class="mota mota-4" aria-hidden="true"></span>
+
+    <div
+        id="bloque-recepcion"
+        class="relative flex flex-col items-center px-7 py-14 text-center"
+    >
+        <h2 class="titulo-recepcion">{titulo}</h2>
+
+        <span class="linea-recepcion"></span>
+
+        <!-- El dibujo también va con máscara: el trazo negro quedaría duro -->
+        <span
+            class="icono icono-oro dibujo-recepcion"
+            style={`--ic:url('${dibujo}')`}
+            aria-hidden="true"></span>
+
+        <h3 class="nombre-salon">
+            {salon.map((linea) => <span class="block">{linea}</span>)}
+        </h3>
+
+        <p class="direccion-salon">
+            {direccion.map((linea) => <span class="block">{linea}</span>)}
+        </p>
+
+        <p class="hora-recepcion">
+            <!-- El reloj se pinta con máscara, no con filtros -->
+            <span
+                class="icono icono-oro reloj-recepcion"
+                style="--ic:url('/imagenes/hora.png')"
+                aria-hidden="true"></span>
+            <span class="hora-texto">{hora}</span>
+        </p>
+
+        <a href={mapa} target="_blank" rel="noopener noreferrer" class="boton-mapa">
+            <img
+                src="/imagenes/ubicacion.png"
+                alt=""
+                width="1080"
+                height="290"
+                aria-hidden="true"
+                class="boton-mapa-medalla select-none"
+            />
+            <span class="boton-mapa-texto">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="pin-mapa">
+                    <path
+                        d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"
+                        fill="currentColor"></path>
+                </svg>
+                <span class="boton-mapa-palabra">{textoBoton}</span>
+            </span>
+        </a>
+    </div>
+</section>
+
+<style>
+    /* Mismo ancho de referencia que el marco de la carta en
+       Dedicatoria.astro: los cqw de abajo salen de acá, así los
+       tamaños quedan a la misma escala en las dos secciones. */
+    #bloque-recepcion {
+        container-type: inline-size;
+    }
+
+    /* ── Polvo de oro ───────────────────────────────────────────── */
+    .mota {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 9999px;
+        background: #e7c689;
+        box-shadow: 0 0 7px 1px rgba(231, 198, 137, 0.85);
+        opacity: 0;
+        pointer-events: none;
+        animation: polvo-recepcion 5.2s ease-in-out infinite;
+    }
+
+    .mota-1 {
+        left: 8%;
+        top: 16%;
+        animation-delay: 0s;
+    }
+
+    .mota-2 {
+        right: 9%;
+        top: 26%;
+        animation-delay: 1.3s;
+    }
+
+    .mota-3 {
+        left: 12%;
+        bottom: 26%;
+        animation-delay: 2.4s;
+    }
+
+    .mota-4 {
+        right: 10%;
+        bottom: 36%;
+        animation-delay: 3.4s;
+    }
+
+    @keyframes polvo-recepcion {
+        0%,
+        100% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.6);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1);
+        }
+    }
+
+    .titulo-recepcion {
+        font-family: "Great Vibes", cursive;
+        color: #e4c179;
+        font-size: 14cqw;
+        line-height: 1.3;
+        text-shadow:
+            0 1px 0 rgba(122, 82, 27, 0.6),
+            0 3px 9px rgba(10, 2, 4, 0.85);
+    }
+
+    .linea-recepcion {
+        width: 15rem;
+        max-width: 60%;
+        height: 1px;
+        margin-top: 0.9rem;
+        background: rgba(201, 164, 92, 0.6);
+    }
+
+    .hora-recepcion {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.8rem;
+        color: #f6efe2;
+    }
+
+    /* El reloj se pinta de oro con máscara, no con filtros */
+    .icono-oro {
+        background-color: #e4c179;
+    }
+
+    .reloj-recepcion {
+        width: 1.5rem;
+        height: 1.5rem;
+        flex: none;
+        filter: drop-shadow(0 2px 5px rgba(10, 2, 4, 0.6));
+    }
+
+    .hora-texto {
+        font-family: "Cinzel", serif;
+        font-weight: 600;
+        font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+        letter-spacing: 0.05em;
+        /* Cifras de caja alta: las de estilo antiguo bailan de altura */
+        font-variant-numeric: lining-nums;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    .dibujo-recepcion {
+        width: 30%;
+        max-width: 120px;
+        /* La proporción del dibujo es 449x517 */
+        aspect-ratio: 449 / 517;
+        margin-top: 1.6rem;
+        filter: drop-shadow(0 4px 10px rgba(10, 2, 4, 0.55));
+    }
+
+    .nombre-salon {
+        font-family: "Callingstone", cursive;
+        color: #e4c179;
+        font-size: 5.2cqw;
+        letter-spacing: 0.03em;
+        line-height: 1.9;
+        margin-top: 1.6rem;
+        text-shadow: 0 2px 7px rgba(10, 2, 4, 0.8);
+    }
+
+    .direccion-salon {
+        font-family: "Callingstone", cursive;
+        color: #dcc9ab;
+        font-size: 5.2cqw;
+        line-height: 1.9;
+        margin-top: 0.9rem;
+        text-shadow: 0 2px 6px rgba(10, 2, 4, 0.7);
+    }
+
+    /*
+       El botón es la placa (ubicacion.png): un cartel con el centro
+       de pergamino en blanco, así que el texto va con tinta oscura,
+       como el cuerpo de la carta, no dorado sobre dorado.
+    */
+    .boton-mapa {
+        position: relative;
+        display: block;
+        width: min(94%, 360px);
+        margin-top: 2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .boton-mapa:hover {
+        transform: scale(1.04);
+    }
+
+    .boton-mapa-medalla {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 8px 18px rgba(10, 2, 4, 0.5));
+    }
+
+    .boton-mapa-texto {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0 13%;
+        white-space: nowrap;
+        /* La placa deja más aire transparente abajo que arriba: sin
+           este empujón el texto queda centrado en el PNG, no en el
+           cartel que se ve. */
+        transform: translateY(-8%);
+        color: #4b2e16;
+        font-family: "Callingstone", cursive;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: clamp(1.05rem, 5vw, 1.3rem);
+        letter-spacing: 0.01em;
+        text-shadow: 0 1px 0 rgba(255, 248, 226, 0.5);
+    }
+
+    .boton-mapa-palabra {
+        white-space: nowrap;
+    }
+
+    .pin-mapa {
+        width: 1.15em;
+        height: 1.15em;
+        flex: none;
+        color: #7d1620;
+    }
+</style>
+
+<script>
+    import { animarEntrada } from "../scripts/animaciones";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const bloque = document.getElementById("bloque-recepcion");
+        if (bloque) animarEntrada(bloque.children, bloque);
+    });
+</script>
